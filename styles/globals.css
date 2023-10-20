@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navbar__shadow {
+  -webkit-box-shadow: 0px -9px 23px 1px rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 0px -9px 23px 1px rgba(0, 0, 0, 0.24);
+  box-shadow: 0px -9px 23px 1px rgba(0, 0, 0, 0.24);
+}
