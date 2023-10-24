@@ -8,7 +8,7 @@ export default function Home() {
 
         <p className="text-4xl flex justify-center"> Jokkefar</p>
         <div className="flex text-center flex-row justify-around">
-          <h1 className="text-oldman-grey flex">UwU</h1>
+          <h1 className="text-oldman-grey flex">Simon vil gerne på mcD</h1>
           <h3 className="text-sky-500 underline ">Ara Ara</h3>
         </div>
       </main>
