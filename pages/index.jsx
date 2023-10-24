@@ -1,16 +1,17 @@
-import Image from "next/image";
+import MarketplacePost from "@/components/explore/MarketplacePost";
 
 export default function Home() {
   return (
     <>
-      <main className="flex overscroll-none flex-col w-screen h-screen overflow-hidden absolute top-0 left-0">
-        <h2 className="text-4xl font-bold">Test af font og pullrequest</h2>
-
-        <p className="text-4xl flex justify-center">Karl</p>
-        <div className="flex text-center flex-row justify-around">
-          <h1 className="text-oldman-grey flex">Simon vil gerne på mcD</h1>
-          <h3 className="text-sky-500 underline ">Ara Ara</h3>
-        </div>
+      <main className="flex flex-row flex-wrap w-5/6 m-auto gap-y-8 pb-24">
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
+        <MarketplacePost img="http://books.google.com/books/content?id=GuAUMQAACAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api" title="Atomic Habits" price="399"/>
       </main>
     </>
   );
