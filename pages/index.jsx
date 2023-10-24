@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <>
       <main className="flex overscroll-none flex-col w-screen h-screen overflow-hidden absolute top-0 left-0">
-        <h2 className="text-4xl font-bold">Test af font</h2>
+        <h2 className="text-4xl font-bold">Test af font og pullrequest</h2>
 
         <p className="text-4xl flex justify-center"> Jokkefar</p>
         <div className="flex text-center flex-row justify-around">
