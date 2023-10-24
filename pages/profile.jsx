@@ -3,9 +3,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/firebase";
 import MenuItem from "@/components/profileview/MenuItem";
+import EditProfile from "@/tabs/EditProfile";
+import { useState } from "react";
 
 const ProfileView = () => {
   const [user, loading, error] = useAuthState(auth);
+  console.log(user);
+  const [showTab, setShowTab] = useState("none");
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -18,6 +23,9 @@ const ProfileView = () => {
 
   return (
     <div className="flex flex-col w-screen h-[100svh] p-4 gap-4 overflow-x-hidden overflow-y-scroll">
+      {showTab === "edit" && (
+        <EditProfile prevPage={() => setShowTab("none")} userInfo={user} />
+      )}
       <h1 className="text-2xl font-bold">Din profil</h1>
       {/* User info */}
       <div className="flex gap-4 items-center">
@@ -38,7 +46,11 @@ const ProfileView = () => {
       {/* Menu */}
       <div className="flex flex-col gap-4 items-center justify-center w-full mt-16">
         <MenuItem title="Gemte opslag" icon="saved" />
-        <MenuItem title="Rediger profil" icon="edit" />
+        <MenuItem
+          action={() => setShowTab("edit")}
+          title="Rediger profil"
+          icon="edit"
+        />
         <MenuItem title="Mine annoncer" icon="my_books" />
         <MenuItem title="Support og FAQ" icon="support" />
         <MenuItem title="Log ud" icon="logout" action={handleSignOut} />
