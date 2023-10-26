@@ -157,3 +157,14 @@ export async function addBook(bookInfo) {
 Messaging
 
 */
+
+// Read all chat from the database
+export async function getAllMessages() {
+  try {
+    const data = await getDocs(collection(db, "chats"));
+    const chat = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    return chat;
+  } catch (err) {
+    console.log(err);
+  }
+}

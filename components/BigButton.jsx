@@ -5,7 +5,7 @@ const BigButton = (props) => {
     if (props.color.toLowerCase() === "green") {
       return "bg-medium-green";
     } else if (props.color.toLowerCase() === "grey") {
-      return "bg-light-grey text-zinc-900";
+      return "bg-oldman text-zinc-900";
     } else if (props.color.toLowerCase() === "red") {
       return "bg-red-500";
     } else {
@@ -15,7 +15,9 @@ const BigButton = (props) => {
   return (
     <button
       onClick={props.click}
-      className={`rounded-full text-white w-72 h-12 text-lg whitespace-nowrap flex justify-center items-center ${getButtonColor()}`}
+      className={`rounded-full text-white w-72 h-12 text-lg whitespace-nowrap flex justify-center items-center ${getButtonColor()} ${
+        props.disabled && "opacity-50 pointer-events-none"
+      }`}
     >
       {props.content}
     </button>

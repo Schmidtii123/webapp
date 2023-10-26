@@ -1,21 +1,24 @@
 import React from "react";
 
-const ProgressBar = (props) => {
-  function getBarColor() {
-    if (props.color.toLowerCase() === "green") {
-      return "bg-medium-green";
-    } else if (props.color.toLowerCase() === "grey") {
-      return "bg-light-grey";
-    } else {
-      return "bg-medium-green";
-    }
-  }
+const ProgressBar = ({ step }) => {
   return (
     <>
-      <div className="flex flex-row justify-around">
-        <div className={`rounded-full h-3 w-20  ${getBarColor()} mx-2`}></div>
-        <div className={`rounded-full h-3 w-20  ${getBarColor()} mx-2`}></div>
-        <div className={`rounded-full h-3 w-20  ${getBarColor()} mx-2`}></div>
+      <div className="flex flex-row justify-around mx-6 py-6">
+        <div
+          className={`rounded-full h-3 w-20  ${
+            step >= 1 ? "bg-medium-green" : "bg-oldman"
+          } mx-2`}
+        ></div>
+        <div
+          className={`rounded-full h-3 w-20  ${
+            step >= 2 ? "bg-medium-green" : "bg-oldman"
+          } mx-2`}
+        ></div>
+        <div
+          className={`rounded-full h-3 w-20  ${
+            step >= 3 ? "bg-medium-green" : "bg-oldman"
+          } mx-2`}
+        ></div>
       </div>
     </>
   );

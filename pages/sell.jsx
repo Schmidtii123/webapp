@@ -24,11 +24,10 @@ const Sell = () => {
           content="Opret annonce"
           click={() => {
             setOpenModal(true);
-            console.log(openModal);
           }}
         />
       </div>
-      {openModal && <CreatePost />}
+      {openModal && <CreatePost redirect={() => setOpenModal(false)} />}
     </>
   );
 };
