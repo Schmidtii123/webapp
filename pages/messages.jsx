@@ -2,71 +2,100 @@ import React from "react";
 import Message from "@/components/messages/Message";
 import { useState, useEffect } from "react";
 import { getAllMessages, getUsernameByID } from "@/firebase/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
+import Conversation from "@/tabs/Conversation";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { getLiveMessages } from "@/firebase/firebase";
 
-const mock = [
-  {
-    id: 1,
-    name: "Jens",
-    message: "Hej, jeg er interesseret i din bog",
-    isRead: false,
-  },
-  {
-    id: 2,
-    name: "Peter",
-    message: "Hey, check min soundcloud ud",
-    isRead: true,
-  },
-  {
-    id: 3,
-    name: "Johanne",
-    message: "Jehovas vidne her, har du 5 minutter?",
-    isRead: false,
-  },
-];
+// Iterates through message object and checks for the ID that does not belong to the currently active user
+function filterObjectValuesWithID(obj, id) {
+  const excludedKeys = ["id", "is_read", "messages", id];
+  const filteredValues = Object.entries(obj)
+    .filter(([key]) => !excludedKeys.includes(key))
+    .map(([_, value]) => value);
+  return filteredValues;
+}
+
 const Messageview = () => {
   const [chats, setChats] = useState([]);
-  const [userInfo, setUserInfo] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [liveChats, setLiveChats] = useState([]);
+  const [filterRead, setFilterRead] = useState(false);
+  const [user] = useAuthState(auth);
+  const [showConversation, setShowConversation] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const activeUser = user.uid;
 
   // Get All chats
   async function getChats() {
-    const chats = await getAllMessages();
-    setChats(chats);
+    try {
+      const chats = await getAllMessages();
+      setChats(chats);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  // Get live messages
+  async function getLiveChats() {
+    try {
+      getLiveMessages((chats) => {
+        if (chats) {
+          setLiveChats(chats);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {
     getChats();
-  });
-  const [filterRead, setFilterRead] = useState(false);
+    getLiveChats();
+  }, []);
+
   return (
-    <section className="flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
-      <h1 className="text-2xl font-bold ml-4">Beskeder</h1>
-      {/* Message wrapper */}
-      <button
-        className="w-80 font-medium text-lg text-center py-2 px-4 mx-auto bg-gray-200 rounded-md my-4"
-        onClick={() => setFilterRead(!filterRead)}
-      >
-        Vis kun nye beskeder
-      </button>
-      <div className="flex flex-col">
-        {chats
-          .filter((message) => {
-            if (filterRead) {
-              return message.isRead === false;
-            } else {
-              return message;
-            }
-          })
-          .map((message, i) => (
-            <Message
-              key={i}
-              name={message.usernames[i]}
-              message={message.messages2[i].content}
-              isRead={message.isRead}
-            />
-          ))}
-      </div>
-    </section>
+    <>
+      {showConversation && (
+        <Conversation
+          data={selectedConversation}
+          redirect={() => setShowConversation(false)}
+        />
+      )}
+      <section className="flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
+        <h1 className="text-2xl font-bold ml-4">Beskeder</h1>
+        {/* Message wrapper */}
+        <button
+          className="w-80 font-medium text-lg text-center py-2 px-4 mx-auto bg-gray-200 rounded-md my-4"
+          onClick={() => setFilterRead(!filterRead)}
+        >
+          Vis kun nye beskeder
+        </button>
+        <div className="flex flex-col">
+          {liveChats
+            ?.filter((message) => {
+              if (filterRead) {
+                return message.is_read === false;
+              } else {
+                return message;
+              }
+            })
+            .map((message, i) => (
+              <Message
+                action={() => {
+                  setShowConversation(true);
+                  setSelectedConversation(message);
+                }}
+                id={message.id}
+                key={i}
+                name={filterObjectValuesWithID(message, activeUser)}
+                message={message.messages[0].content}
+                isRead={message.is_read}
+              />
+            ))}
+        </div>
+      </section>
+    </>
   );
 };
 

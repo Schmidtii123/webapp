@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 import {
   collection,
   addDoc,
@@ -10,6 +11,8 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  setDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -36,7 +39,12 @@ export const signInWithGoogle = () => {
   signInWithPopup(auth, provider)
     .then((result) => {
       console.log(result);
-      window.location.assign("/");
+      addUser({
+        name: result.user.displayName,
+        email: result.user.email,
+        uid: result.user.uid,
+      });
+      /* window.location.assign("/"); */
     })
     .catch((error) => {
       console.log(error.message);
@@ -44,13 +52,31 @@ export const signInWithGoogle = () => {
     });
 };
 
+// Add user to Database, and checks if their information is already stored
+export async function addUser(user) {
+  try {
+    const userDocRef = doc(db, "users", user.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (!userDoc.exists()) {
+      await setDoc(userDocRef, user);
+    } else {
+      console.log("User with ID", user.id, "already exists.");
+    }
+  } catch (error) {
+    console.error("Error adding user:", error);
+  }
+}
+
 /* 
 
 Firestore (Database)
 
 */
 
-const db = getFirestore(app);
+export const db = getFirestore(app);
+
+//
 
 // Read all books from the database
 export async function getAllBooks() {
@@ -164,6 +190,46 @@ export async function getAllMessages() {
     const data = await getDocs(collection(db, "chats"));
     const chat = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     return chat;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export function getLiveMessages(callback) {
+  const docRef = collection(db, "chats");
+  onSnapshot(
+    docRef,
+    (snapshot) => {
+      let conversations = [];
+      snapshot.docs.forEach((doc) => {
+        conversations.push({ ...doc.data(), id: doc.id });
+      });
+      callback(conversations);
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
+}
+
+// Get live chat updates from chat ID
+export function getChatUpdates(chatID) {
+  try {
+    const unsub = onSnapshot(doc(db, "chats", chatID), (doc) => {
+      console.log("Current data: ", doc.data());
+      return doc.data();
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Update message object key: is_read to true
+export async function markMessageAsRead(msgID) {
+  try {
+    const docRef = doc(db, "chats", msgID);
+    const newMessage = { is_read: true };
+    await updateDoc(docRef, newMessage);
   } catch (err) {
     console.log(err);
   }
