@@ -4,7 +4,7 @@ const Message = (props) => {
   return (
     <div
       onClick={() => props.action()}
-      className={`flex w-screen px-2 py-4 border-b border-b-gray-300 rounded-none ${
+      className={`flex w-screen px-2 py-4 border-b border-b-gray-300 rounded-none  ${
         !props.isRead && "bg-gray-100"
       }`}
     >
