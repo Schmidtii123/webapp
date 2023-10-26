@@ -212,24 +212,34 @@ export function getLiveMessages(callback) {
   );
 }
 
-// Get live chat updates from chat ID
-export function getChatUpdates(chatID) {
+// Update message object key: is_read to true
+export async function markMessageAsRead(msgID, bool) {
   try {
-    const unsub = onSnapshot(doc(db, "chats", chatID), (doc) => {
-      console.log("Current data: ", doc.data());
-      return doc.data();
-    });
-  } catch (error) {
-    console.error(error);
+    const docRef = doc(db, "chats", msgID);
+    let newMessage;
+    if (bool) {
+      newMessage = { is_read: true };
+    } else if (!bool) {
+      newMessage = { is_read: false };
+    }
+    await updateDoc(docRef, newMessage);
+  } catch (err) {
+    console.log(err);
   }
 }
 
-// Update message object key: is_read to true
-export async function markMessageAsRead(msgID) {
+// Add message to document
+export async function addMessage(msgID, messageData) {
   try {
     const docRef = doc(db, "chats", msgID);
-    const newMessage = { is_read: true };
-    await updateDoc(docRef, newMessage);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const currentData = docSnap.data();
+      const updatedMessages = [...currentData.messages, messageData];
+      await updateDoc(docRef, {
+        messages: updatedMessages,
+      });
+    }
   } catch (err) {
     console.log(err);
   }

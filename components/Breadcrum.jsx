@@ -5,7 +5,7 @@ const Breadcrum = ({ title = "Breadcrum", destination = () => {} }) => {
     <>
       <div
         onClick={destination}
-        className="w-full h-20 flex items-center gap-2 pt-1 px-2"
+        className="w-full h-20 flex items-center gap-2 pt-1 px-2 border-b border-gray-300"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

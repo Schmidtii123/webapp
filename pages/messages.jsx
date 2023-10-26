@@ -26,16 +26,6 @@ const Messageview = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const activeUser = user.uid;
 
-  // Get All chats
-  async function getChats() {
-    try {
-      const chats = await getAllMessages();
-      setChats(chats);
-    } catch (error) {
-      return null;
-    }
-  }
-
   // Get live messages
   async function getLiveChats() {
     try {
@@ -43,21 +33,40 @@ const Messageview = () => {
         if (chats) {
           setLiveChats(chats);
         }
+        if (chats) {
+          try {
+            if (liveChats.length > 0 && convoID) {
+              setSelectedConversation(
+                liveChats.find((chat) => chat.id === convoID)
+              );
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
       });
+      if (liveChats.length > 0 && convoID) {
+        setSelectedConversation(liveChats.find((chat) => chat.id === convoID));
+      }
     } catch (error) {
       console.error(error);
     }
   }
 
   useEffect(() => {
-    getChats();
     getLiveChats();
   }, []);
+
+  const [convoID, setConvoID] = useState(null);
+  const [counter, setCounter] = useState(0);
 
   return (
     <>
       {showConversation && (
         <Conversation
+          uid={activeUser}
+          ID={convoID}
+          counter={counter}
           data={selectedConversation}
           redirect={() => setShowConversation(false)}
         />
@@ -85,6 +94,7 @@ const Messageview = () => {
                 action={() => {
                   setShowConversation(true);
                   setSelectedConversation(message);
+                  setConvoID(message.id);
                 }}
                 id={message.id}
                 key={i}
