@@ -1,4 +1,5 @@
 import MarketplacePost from "@/components/explore/MarketplacePost";
+import SearchBar from "@/components/explore/SearchBar";
 import { useEffect, useState } from "react";
 import { getAllBooks } from "@/firebase/firebase";
 
@@ -16,12 +17,8 @@ export default function Home() {
   return (
     <>
       <main className="flex flex-col w-full pb-24 pt-4">
-        <div className="fixed top-0 left-0 bg-white w-full">
-          <h1 className="font-bold text-3xl pl-6">Opdag</h1>
-          <input type="text" />
-          <button>Search</button>
-        </div>
-        <div className="flex flex-wrap justify-around gap-y-4">
+        <SearchBar books={books} setFilteredBooks={setBooks} />
+        <div className="flex flex-wrap justify-around gap-y-4 pt-24">
           {books.map((book) => (
             <MarketplacePost
               img={book.image}
