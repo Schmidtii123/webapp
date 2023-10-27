@@ -10,7 +10,14 @@ import { getLiveMessages } from "@/firebase/firebase";
 
 // Iterates through message object and checks for the ID that does not belong to the currently active user
 function filterObjectValuesWithID(obj, id) {
-  const excludedKeys = ["id", "is_read", "messages", id];
+  const excludedKeys = [
+    "id",
+    "is_read",
+    "messages",
+    "userIDs",
+    "chat_started",
+    id,
+  ];
   const filteredValues = Object.entries(obj)
     .filter(([key]) => !excludedKeys.includes(key))
     .map(([_, value]) => value);
@@ -58,15 +65,15 @@ const Messageview = () => {
   }, []);
 
   const [convoID, setConvoID] = useState(null);
-  const [counter, setCounter] = useState(0);
+  const [recieverName, setRecieverName] = useState(null);
 
   return (
     <>
       {showConversation && (
         <Conversation
+          name={recieverName}
           uid={activeUser}
           ID={convoID}
-          counter={counter}
           data={selectedConversation}
           redirect={() => setShowConversation(false)}
         />
@@ -89,17 +96,28 @@ const Messageview = () => {
                 return message;
               }
             })
+            .filter((message) => {
+              return message.userIDs.includes(activeUser);
+            })
+            .sort((a, b) => b.chat_started - a.chat_started)
             .map((message, i) => (
               <Message
                 action={() => {
                   setShowConversation(true);
                   setSelectedConversation(message);
                   setConvoID(message.id);
+                  setRecieverName(
+                    filterObjectValuesWithID(message, activeUser)
+                  );
                 }}
                 id={message.id}
                 key={i}
                 name={filterObjectValuesWithID(message, activeUser)}
-                message={message.messages[0].content}
+                message={
+                  message.messages.length > 0
+                    ? message.messages[message.messages.length - 1].content
+                    : "Ingen beskeder"
+                }
                 isRead={message.is_read}
               />
             ))}

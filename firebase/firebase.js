@@ -244,3 +244,30 @@ export async function addMessage(msgID, messageData) {
     console.log(err);
   }
 }
+
+// Add new chat to the database
+export async function addNewChat(conversationObj) {
+  try {
+    const colRef = collection(db, "chats");
+    await addDoc(colRef, conversationObj);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// get username from ID
+export async function getUsernameFromID(id) {
+  try {
+    const docRef = doc(db, "users", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const user = docSnap.data();
+      return user.name;
+    } else if (!docSnap.exists()) {
+      console.log("User not found");
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

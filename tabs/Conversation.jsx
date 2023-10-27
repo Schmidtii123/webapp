@@ -9,15 +9,17 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { addMessage } from "@/firebase/firebase";
 
-const Conversation = ({ data, redirect, ID, uid }) => {
+const Conversation = ({ data, redirect, ID, uid, name }) => {
   // Update message status to being read
   useEffect(() => {
     markMessageAsRead(data.id, true);
-    setTimeout(() => {
-      document.getElementById("last-message").scrollIntoView({
-        behavior: "smooth",
-      });
-    }, 500);
+    if (data.messages.length > 0) {
+      setTimeout(() => {
+        document.getElementById("last-message").scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 500);
+    }
   }, []);
 
   // Get user ID in order to style messages accordingly
@@ -37,6 +39,8 @@ const Conversation = ({ data, redirect, ID, uid }) => {
 
   // Handle sending messages
   const currentDate = new Date();
+  const danishTimeOffset = +120;
+  currentDate.setMinutes(currentDate.getMinutes() + danishTimeOffset);
 
   const [messageInfo, setMessageInfo] = useState({
     content: "",
@@ -59,7 +63,7 @@ const Conversation = ({ data, redirect, ID, uid }) => {
       .messages.sort((a, b) => a.timestamp - b.timestamp);
     return (
       <div className="w-screen min-h-[100svh] fixed top-0 left-0 bg-white slide-from-right">
-        <Breadcrum title="Nicolai" destination={redirect} />
+        <Breadcrum title={name} destination={redirect} />
         <div className="flex flex-col gap-4 px-4 h-[80svh] w-full overflow-y-scroll pb-20 pt-10">
           {messageArray?.map((message, i) => (
             <div
@@ -96,6 +100,7 @@ const Conversation = ({ data, redirect, ID, uid }) => {
               placeholder="Skriv en besked..."
             />
             <button
+              disabled={messageInfo.content.length === 0}
               onClick={(e) => {
                 e.preventDefault();
                 handleMessageSend();

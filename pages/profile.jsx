@@ -5,10 +5,10 @@ import { auth } from "@/firebase/firebase";
 import MenuItem from "@/components/profileview/MenuItem";
 import EditProfile from "@/tabs/EditProfile";
 import { useState } from "react";
+import Book from "@/tabs/Book";
 
 const ProfileView = () => {
   const [user, loading, error] = useAuthState(auth);
-  console.log(user);
   const [showTab, setShowTab] = useState("none");
 
   const handleSignOut = () => {
@@ -26,13 +26,18 @@ const ProfileView = () => {
       {showTab === "edit" && (
         <EditProfile prevPage={() => setShowTab("none")} userInfo={user} />
       )}
+      {true && <Book />}
       <h1 className="text-2xl font-bold">Din profil</h1>
       {/* User info */}
       <div className="flex gap-4 items-center">
         {/* Avatar */}
         <div className=" rounded-full overflow-hidden w-20">
           <img
-            src={user.photoURL}
+            src={
+              user.photoURL
+                ? user.photoURL
+                : "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
+            }
             className="w-full h-auto"
             alt="user avatar"
           />
