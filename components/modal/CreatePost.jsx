@@ -8,11 +8,8 @@ import ConfirmCreate from "./ConfirmCreate";
 import axios from "axios";
 
 function CreatePost({ redirect }) {
-  const handleClick = () => {
-    window.location.reload();
-  };
-
   const [openModal, setOpenModal] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [showStep, setShowStep] = useState(1);
   const [bookInfo, setBookInfo] = useState({
     condition: 0,
@@ -27,6 +24,7 @@ function CreatePost({ redirect }) {
 
   const [isbnInput, setIsbnInput] = useState("");
   async function getBookInfoFromISBN(isbn) {
+    setShowError(false);
     const filteredString = isbn.replace(/-/g, "");
     try {
       const response = await axios.get(
@@ -47,6 +45,7 @@ function CreatePost({ redirect }) {
       });
       setShowStep(2);
     } catch (error) {
+      setShowError(true);
       console.log(error);
     }
   }
@@ -83,7 +82,9 @@ function CreatePost({ redirect }) {
               onChange={(e) => setIsbnInput(e.target.value)}
               type="text"
               placeholder="Indtast ISBN nummer"
-              className="border-b-2 border-oldman w-72 placeholder-font-black outline-none"
+              className={`border-b-2 border-oldman w-72 placeholder-font-black outline-none ${
+                showError && "border-red-500 animate-shake"
+              }`}
             />
           </div>
           <div className="flex flex-col gap-y-4">
@@ -95,7 +96,7 @@ function CreatePost({ redirect }) {
                 getBookInfoFromISBN(isbnInput);
               }}
             />
-            <BigButton color="grey" content="Annuller" click={handleClick} />
+            <BigButton color="grey" content="Annuller" click={redirect} />
           </div>
         </section>
       </div>

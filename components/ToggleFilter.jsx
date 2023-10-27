@@ -21,10 +21,13 @@ const ToggleFilter = (props) => {
     <button
       name="semester"
       value={props.value}
-      className={`h-auto w-auto p-1 ${getToggleColor()} rounded`}
-      onClick={(toggleActive, props.click)}
+      className={`h-auto w-auto px-2 py-1 ${getToggleColor()} rounded`}
+      onClick={() => {
+        toggleActive();
+        props.click;
+      }}
     >
-      <p className="text-sm font-light">{props.title}</p>
+      <p className=" font-light">{props.title}</p>
     </button>
   );
 };

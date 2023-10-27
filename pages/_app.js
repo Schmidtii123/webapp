@@ -42,16 +42,16 @@ export default function App({ Component, pageProps }) {
     );
   else if (user !== null) {
     return (
-      <main className={poppins.className}>
+      <div className={poppins.className}>
         <Component {...pageProps} />
         <NavBar />
-      </main>
+      </div>
     );
   } else if (user === null) {
     return (
-      <main className={poppins.className}>
+      <div className={poppins.className}>
         <Login loginFunction={handleLogin} />
-      </main>
+      </div>
     );
   }
 }

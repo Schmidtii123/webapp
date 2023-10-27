@@ -3,6 +3,7 @@ import SearchBar from "@/components/explore/SearchBar";
 import FilterModal from "@/components/modal/FilterModal";
 import { useEffect, useState } from "react";
 import { getAllBooks } from "@/firebase/firebase";
+import Book from "@/tabs/Book";
 
 export default function Home() {
   const [books, setBooks] = useState([]);
@@ -17,6 +18,7 @@ export default function Home() {
   }, []);
 
   const [filterTerm, setFilterTerm] = useState("");
+  const [selectedBook, setSelectedBook] = useState(null);
   const [filterOptions, setFilterOptions] = useState({
     sort: "",
     major: "",
@@ -37,6 +39,9 @@ export default function Home() {
 
   return (
     <>
+      {selectedBook && (
+        <Book docID={selectedBook} redirect={() => setSelectedBook(null)} />
+      )}
       <section className="fixed flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
         <h1 className="text-2xl font-bold ml-4">Opdag</h1>
         <div className="flex justify-between pr-4 pl-4 pb-4 flex-center">
@@ -103,6 +108,7 @@ export default function Home() {
               })
               .map((book) => (
                 <MarketplacePost
+                  click={() => setSelectedBook(book.id)}
                   key={book.id}
                   img={book.image}
                   title={book.name}
@@ -113,6 +119,7 @@ export default function Home() {
       </section>
       {openFilter && (
         <FilterModal
+          currentOptions={filterOptions}
           onFilterChange={handleFilterChange}
           redirect={() => setOpenFilter(false)}
         />

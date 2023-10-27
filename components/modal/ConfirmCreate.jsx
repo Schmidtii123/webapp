@@ -25,8 +25,8 @@ const ConfirmCreate = ({ redirect, data, changeStep }) => {
             </div>
             <p className="text-2xl text-center">{data.name}</p>
           </div>
-          <div className="flex flex-col items-center gap-y-4 pt-16">
-            <p className="text-4xl font-medium pb-2">Er det din bog?</p>
+          <div className="flex flex-col items-center gap-y-4 pt-4">
+            <p className="text-3xl font-medium pb-2">Er det din bog?</p>
             <BigButton
               color="green"
               content="Ja"

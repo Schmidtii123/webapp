@@ -13,7 +13,7 @@ const Sell = () => {
       <div className="flex pt-4">
         <h2 className=" text-2xl font-bold ml-4">Sælg</h2>
       </div>
-      <div className="flex flex-col items-center gap-16">
+      <div className="flex flex-col items-center gap-8">
         <Lottie className=" w-52 pt-8" animationData={animationData} />
         <p className="text-xl max-w-xs text-center pb-28">
           Du har ingen bøger til salg. Opret en annonce og få hurtigt afsat dine

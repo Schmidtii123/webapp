@@ -26,7 +26,6 @@ const ProfileView = () => {
       {showTab === "edit" && (
         <EditProfile prevPage={() => setShowTab("none")} userInfo={user} />
       )}
-      {true && <Book />}
       <h1 className="text-2xl font-bold">Din profil</h1>
       {/* User info */}
       <div className="flex gap-4 items-center">

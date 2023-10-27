@@ -16,6 +16,7 @@ function filterObjectValuesWithID(obj, id) {
     "messages",
     "userIDs",
     "chat_started",
+    "book",
     id,
   ];
   const filteredValues = Object.entries(obj)
@@ -71,6 +72,7 @@ const Messageview = () => {
     <>
       {showConversation && (
         <Conversation
+          book={selectedConversation.book}
           name={recieverName}
           uid={activeUser}
           ID={convoID}
@@ -87,7 +89,7 @@ const Messageview = () => {
         >
           Vis kun nye beskeder
         </button>
-        <div className="flex flex-col">
+        <div className="flex flex-col h-[75svh] overflow-y-scroll">
           {liveChats
             ?.filter((message) => {
               if (filterRead) {
@@ -112,11 +114,15 @@ const Messageview = () => {
                 }}
                 id={message.id}
                 key={i}
-                name={filterObjectValuesWithID(message, activeUser)}
+                name={
+                  filterObjectValuesWithID(message, activeUser) +
+                  ": " +
+                  message?.book
+                }
                 message={
                   message.messages.length > 0
                     ? message.messages[message.messages.length - 1].content
-                    : "Ingen beskeder"
+                    : "Skriv en besked..."
                 }
                 isRead={message.is_read}
               />

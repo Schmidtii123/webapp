@@ -9,7 +9,7 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { addMessage } from "@/firebase/firebase";
 
-const Conversation = ({ data, redirect, ID, uid, name }) => {
+const Conversation = ({ data, redirect, ID, uid, name, book }) => {
   // Update message status to being read
   useEffect(() => {
     markMessageAsRead(data.id, true);
@@ -63,7 +63,7 @@ const Conversation = ({ data, redirect, ID, uid, name }) => {
       .messages.sort((a, b) => a.timestamp - b.timestamp);
     return (
       <div className="w-screen min-h-[100svh] fixed top-0 left-0 bg-white slide-from-right">
-        <Breadcrum title={name} destination={redirect} />
+        <Breadcrum title={name + ": " + book} destination={redirect} />
         <div className="flex flex-col gap-4 px-4 h-[80svh] w-full overflow-y-scroll pb-20 pt-10">
           {messageArray?.map((message, i) => (
             <div
