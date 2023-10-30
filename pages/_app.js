@@ -12,6 +12,35 @@ const poppins = Poppins({
   subsets: ["latin-ext"],
 });
 
+import { create } from "zustand";
+
+export const useFilterStore = create((set) => ({
+  filter: {
+    sort: "",
+    major: "",
+    semester: [],
+    condition: 0,
+  },
+  setSemester: (newSemester) => {
+    set((state) => ({
+      filter: {
+        ...state.filter,
+        semester: [...state.filter.semester, newSemester],
+      },
+    }));
+  },
+  removeSemester: (semesterToRemove) => {
+    set((state) => ({
+      filter: {
+        ...state.filter,
+        semester: state.filter.semester.filter(
+          (semester) => semester !== semesterToRemove
+        ),
+      },
+    }));
+  },
+}));
+
 export default function App({ Component, pageProps }) {
   const [user, loading, error] = useAuthState(auth);
   const handleLogin = () => {

@@ -1,34 +1,34 @@
-import React from "react";
-import { useState } from "react";
-
+import React, { useState } from "react";
+import { useFilterStore } from "@/pages/_app";
 const ToggleFilter = (props) => {
   const [isActive, setIsActive] = useState(false);
-  console.log(isActive);
+
+  const { setSemester, removeSemester } = useFilterStore();
 
   const toggleActive = () => {
     setIsActive(!isActive);
   };
 
-  function getToggleColor() {
-    if (isActive === true) {
-      return "bg-medium-green text-white";
-    } else {
-      return "bg-oldman text-black";
-    }
-  }
+  const getToggleColor = () => {
+    return isActive ? "bg-medium-green" : "bg-oldman";
+  };
 
   return (
-    <button
-      name="semester"
-      value={props.value}
-      className={`h-auto w-auto px-2 py-1 ${getToggleColor()} rounded`}
-      onClick={() => {
-        toggleActive();
-        props.click;
-      }}
+    <label
+      className={`relative inline-block cursor-pointer ${getToggleColor()} rounded px-2 py-1`}
     >
-      <p className=" font-light">{props.title}</p>
-    </button>
+      <input
+        name={props.title}
+        type="checkbox"
+        className="hidden"
+        checked={isActive}
+        onClick={() => {
+          toggleActive();
+          isActive ? removeSemester(props.value) : setSemester(props.value);
+        }}
+      />
+      <span className="font-light">{props.title}</span>
+    </label>
   );
 };
 

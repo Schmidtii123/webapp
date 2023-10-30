@@ -6,6 +6,7 @@ import BigButton from "@/components/BigButton";
 import { useState } from "react";
 import ConfirmCreate from "./ConfirmCreate";
 import axios from "axios";
+import Study from "./Study";
 
 function CreatePost({ redirect }) {
   const [openModal, setOpenModal] = useState(false);
@@ -61,12 +62,18 @@ function CreatePost({ redirect }) {
             data={bookInfo}
           />
         )}
+        {showStep >= 3 && (
+          <Study
+            changeStep={() => setShowStep(showStep + 1)}
+            redirect={() => setShowStep(1)}
+            data={bookInfo}
+          />
+        )}
         <section className="flex flex-col items-center ">
           <ProgressBar step={1} />
           <div className="flex flex-col items-center pb-12">
             <p className=" w-72 pb-6">
-              Opret en annonce ved at scanne bogens stregkode eller indtaste
-              ISBN nummeret manuelt
+              Opret en annonce ved at indtaste ISBN nummeret
             </p>
             <Image
               alt="#"
@@ -76,7 +83,6 @@ function CreatePost({ redirect }) {
             />
           </div>
           <div className="flex flex-col items-center gap-y-3 pb-6">
-            <BigButton disabled color="grey" content="Scan stregkode" />
             <p>eller</p>
             <input
               onChange={(e) => setIsbnInput(e.target.value)}

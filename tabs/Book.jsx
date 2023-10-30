@@ -10,6 +10,12 @@ import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/firebase";
 import { getUsernameFromID } from "@/firebase/firebase";
+import {
+  addBookToSaved,
+  removeBookFromSaved,
+  getUserInfo,
+} from "@/firebase/firebase";
+import toast, { Toaster } from "react-hot-toast";
 
 const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   const [snapshot, loading] = useDocument(doc(db, "books", docID));
@@ -17,13 +23,8 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   if (snapshot) {
     data = snapshot.data();
   }
+
   const [sellerUsername, setSellerUsername] = useState("");
-  useEffect(() => {
-    console.log(snapshot);
-    if (snapshot) {
-      console.log(snapshot.data());
-    }
-  }, [snapshot]);
 
   function getStandValue(stand_n) {
     switch (stand_n) {
@@ -52,7 +53,7 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   async function getSellerName() {
     try {
       const sellerName = await getUsernameFromID(sellerID);
-      console.log(sellerName);
+
       setSellerUsername(sellerName);
     } catch (error) {
       console.log(error);
@@ -77,7 +78,6 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
       userIDs: [sellerID, activeUserID],
       chat_started: new Date(),
     };
-    console.log(conversationData);
     try {
       await addNewChat(conversationData);
       router.push("/messages");
@@ -86,13 +86,83 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
     }
   }
 
+  async function handleSaveBook() {
+    const id = snapshot.id;
+    const name = data.name;
+    try {
+      await addBookToSaved(id, name, activeUserID);
+      toast.success("Bogen er gemt", {
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#79AC78",
+        },
+        style: {
+          borderRadius: "10px",
+          background: "#79AC78",
+          color: "#ffffff",
+        },
+      });
+      setIsSaved(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleRemoveBook() {
+    const id = snapshot.id;
+    const userID = activeUserID;
+    try {
+      await removeBookFromSaved(id, userID);
+      toast.success("Bogen er fjernet fra gemte opslag", {
+        iconTheme: {
+          primary: "#ffffff",
+          secondary: "#79AC78",
+        },
+        style: {
+          borderRadius: "10px",
+          background: "#79AC78",
+          color: "#ffffff",
+        },
+      });
+      setIsSaved(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const [isSaved, setIsSaved] = useState(false);
+  async function checkIfSaved() {
+    const id = snapshot.id;
+    const userID = activeUserID;
+    try {
+      const data = await getUserInfo(userID);
+
+      if (data.saved_books.some((book) => book.bookID === id)) {
+        setIsSaved(true);
+        return true;
+      } else {
+        setIsSaved(false);
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (snapshot) {
+      checkIfSaved();
+    }
+  }, [snapshot]);
+
   if (snapshot)
     return (
       <div className="w-screen min-h-[100svh] fixed top-0 left-0 bg-slate-50 slide-from-right z-[9999]">
+        <Toaster />
         <Breadcrum title="Opslag" destination={redirect} />
         <section className="w-full h-full flex flex-col gap-y-4 pt-8 items-center">
           {/* Image wrapper */}
-          <div className="w-[13rem] h-[17rem] ">
+          <div className="w-[10rem] h-[14rem] ">
             <img
               className="w-full h-full object-cover border border-gray-300"
               src={data.image}
@@ -116,12 +186,23 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
               <span className="font-medium">Stand:</span>{" "}
               {getStandValue(data.condition)}
             </p>
-            <div className="flex w-full justify-center pt-2">
-              <BigButton
-                click={() => handleContactSeller()}
-                content="Kontakt sælger"
-                color="green"
-              />
+            <div className="flex w-full justify-center pt-2 gap-2">
+              {snapshot && user && (
+                <>
+                  <BigButton
+                    click={() => {
+                      isSaved ? handleRemoveBook() : handleSaveBook();
+                    }}
+                    content={isSaved ? "Slet gemt" : "Gem opslag"}
+                    color="grey"
+                  />
+                  <BigButton
+                    click={() => handleContactSeller()}
+                    content="Kontakt sælger"
+                    color="green"
+                  />
+                </>
+              )}
             </div>
           </div>
         </section>

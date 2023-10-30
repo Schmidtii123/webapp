@@ -43,6 +43,7 @@ export const signInWithGoogle = () => {
         name: result.user.displayName,
         email: result.user.email,
         uid: result.user.uid,
+        saved_books: [],
       });
       /* window.location.assign("/"); */
     })
@@ -68,11 +69,62 @@ export async function addUser(user) {
   }
 }
 
+// Get user info from Database by ID
+export async function getUserInfo(userID) {
+  try {
+    const userDocRef = doc(db, "users", userID);
+    const userInfo = await getDoc(userDocRef);
+    return userInfo.data();
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 /* 
 
 Firestore (Database)
 
 */
+
+// Add books to user's saved_books array
+export async function addBookToSaved(bookID, bookName, userID) {
+  try {
+    const docRef = doc(db, "users", userID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const currentBookList = docSnap.data();
+      const bookObj = {
+        bookID: bookID,
+        name: bookName,
+      };
+      const updatedBookList = [...currentBookList.saved_books, bookObj];
+      await updateDoc(docRef, {
+        saved_books: updatedBookList,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function removeBookFromSaved(bookID, userID) {
+  try {
+    const docRef = doc(db, "users", userID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const currentBookList = docSnap.data();
+      const updatedBookList = currentBookList.saved_books.filter(
+        (book) => book.bookID !== bookID
+      );
+      await updateDoc(docRef, {
+        saved_books: updatedBookList,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export const db = getFirestore(app);
 

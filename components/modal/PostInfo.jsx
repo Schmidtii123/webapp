@@ -53,6 +53,7 @@ function PostInfo({ redirect }) {
               <p className="border-b-2 border-oldman placeholder-font-black mb-5 self-start">
                 Uddannelse
               </p>
+
               <p className="border-b-2 border-oldman placeholder-font-black mb-5 self-start">
                 Semester
               </p>

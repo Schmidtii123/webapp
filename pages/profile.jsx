@@ -6,6 +6,7 @@ import MenuItem from "@/components/profileview/MenuItem";
 import EditProfile from "@/tabs/EditProfile";
 import { useState } from "react";
 import Book from "@/tabs/Book";
+import SavedBooks from "@/tabs/SavedBooks";
 
 const ProfileView = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -23,8 +24,8 @@ const ProfileView = () => {
 
   return (
     <div className="flex flex-col w-screen h-[100svh] p-4 gap-4 overflow-x-hidden overflow-y-scroll">
-      {showTab === "edit" && (
-        <EditProfile prevPage={() => setShowTab("none")} userInfo={user} />
+      {showTab === "saved" && (
+        <SavedBooks redirect={() => setShowTab("none")} />
       )}
       <h1 className="text-2xl font-bold">Din profil</h1>
       {/* User info */}
@@ -49,11 +50,10 @@ const ProfileView = () => {
       </div>
       {/* Menu */}
       <div className="flex flex-col gap-4 items-center justify-center w-full mt-16">
-        <MenuItem title="Gemte opslag" icon="saved" />
         <MenuItem
-          action={() => setShowTab("edit")}
-          title="Rediger profil"
-          icon="edit"
+          title="Gemte opslag"
+          icon="saved"
+          action={() => setShowTab("saved")}
         />
         <MenuItem title="Mine annoncer" icon="my_books" />
         <MenuItem title="Support og FAQ" icon="support" />

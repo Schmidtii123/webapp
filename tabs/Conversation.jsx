@@ -90,7 +90,7 @@ const Conversation = ({ data, redirect, ID, uid, name, book }) => {
                 setMessageInfo({ ...messageInfo, content: e.target.value });
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && messageInfo.content.length > 0) {
                   handleMessageSend();
                 }
               }}

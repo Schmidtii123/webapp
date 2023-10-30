@@ -4,10 +4,12 @@ import FilterModal from "@/components/modal/FilterModal";
 import { useEffect, useState } from "react";
 import { getAllBooks } from "@/firebase/firebase";
 import Book from "@/tabs/Book";
+import { useFilterStore } from "./_app";
 
 export default function Home() {
   const [books, setBooks] = useState([]);
   const [openFilter, setOpenFilter] = useState(false);
+  const { filter } = useFilterStore();
 
   async function getData() {
     const data = await getAllBooks();
@@ -34,8 +36,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(filterOptions);
-  }, [filterOptions]);
+    console.log(filter);
+  }, [filter]);
 
   return (
     <>

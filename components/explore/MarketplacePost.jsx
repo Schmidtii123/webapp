@@ -2,7 +2,10 @@ import React from "react";
 
 const MarketplacePost = (props) => {
   return (
-    <div onClick={props.click} className="w-40 flex flex-col items-center">
+    <div
+      onClick={props.click}
+      className="w-40 flex flex-col items-center cursor-pointer"
+    >
       <div>
         <img
           src={props.img}
