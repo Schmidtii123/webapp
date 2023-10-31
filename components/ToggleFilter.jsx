@@ -1,16 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFilterStore } from "@/pages/_app";
+
 const ToggleFilter = (props) => {
   const [isActive, setIsActive] = useState(false);
 
-  const { setSemester, removeSemester } = useFilterStore();
+  const { setSemester, removeSemester, setCondition, removeCondition, filter } =
+    useFilterStore();
+
+  useEffect(() => {
+    if (props.type === "semester") {
+      if (filter.semester.includes(props.value)) {
+        setIsActive(true);
+      }
+    } else if (props.type === "condition") {
+      if (filter.condition.includes(props.value)) {
+        setIsActive(true);
+      }
+    }
+  }, [filter]);
 
   const toggleActive = () => {
     setIsActive(!isActive);
   };
 
   const getToggleColor = () => {
-    return isActive ? "bg-medium-green" : "bg-oldman";
+    return isActive ? "bg-medium-green text-white" : "bg-oldman text-black";
   };
 
   return (
@@ -18,13 +32,17 @@ const ToggleFilter = (props) => {
       className={`relative inline-block cursor-pointer ${getToggleColor()} rounded px-2 py-1`}
     >
       <input
+        disabled={props.disabled}
         name={props.title}
         type="checkbox"
         className="hidden"
-        checked={isActive}
         onClick={() => {
           toggleActive();
-          isActive ? removeSemester(props.value) : setSemester(props.value);
+          if (props.type === "semester") {
+            isActive ? removeSemester(props.value) : setSemester(props.value);
+          } else if (props.type === "condition") {
+            isActive ? removeCondition(props.value) : setCondition(props.value);
+          }
         }}
       />
       <span className="font-light">{props.title}</span>

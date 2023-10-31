@@ -5,7 +5,7 @@ import { auth } from "@/firebase/firebase";
 import Login from "@/components/Login";
 import { Poppins } from "next/font/google";
 import { signInWithGoogle } from "@/firebase/firebase";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -14,12 +14,72 @@ const poppins = Poppins({
 
 import { create } from "zustand";
 
+export const useBookInfo = create((set) => ({
+  bookInfo: {
+    name: "",
+    condition: 0,
+    image: "",
+    link: "",
+    major: "",
+    price: 0,
+    sellerID: "",
+    semester: 0,
+  },
+  setBookInfo: (newInfoKey, newInfoValue) => {
+    set((state) => ({
+      bookInfo: { ...state.bookInfo, [newInfoKey]: newInfoValue },
+    }));
+  },
+  clearBookInfo: () => {
+    set((state) => ({
+      bookInfo: {
+        name: "",
+        condition: 0,
+        image: "",
+        link: "",
+        major: "",
+        price: 0,
+        sellerID: "",
+        semester: 0,
+      },
+    }));
+  },
+}));
+
 export const useFilterStore = create((set) => ({
   filter: {
     sort: "",
     major: "",
     semester: [],
-    condition: 0,
+    condition: [],
+  },
+  clearFilter: () => {
+    set((state) => ({
+      filter: {
+        sort: "",
+        major: "",
+        semester: [],
+        condition: [],
+      },
+    }));
+  },
+  setCondition: (newCondition) => {
+    set((state) => ({
+      filter: {
+        ...state.filter,
+        condition: [...state.filter.condition, newCondition],
+      },
+    }));
+  },
+  removeCondition: (conditionToRemove) => {
+    set((state) => ({
+      filter: {
+        ...state.filter,
+        condition: state.filter.condition.filter(
+          (condition) => condition !== conditionToRemove
+        ),
+      },
+    }));
   },
   setSemester: (newSemester) => {
     set((state) => ({
@@ -42,10 +102,15 @@ export const useFilterStore = create((set) => ({
 }));
 
 export default function App({ Component, pageProps }) {
+  const { bookInfo } = useBookInfo();
   const [user, loading, error] = useAuthState(auth);
   const handleLogin = () => {
     signInWithGoogle();
   };
+
+  useEffect(() => {
+    console.log(bookInfo);
+  }, [bookInfo]);
 
   if (loading)
     return (

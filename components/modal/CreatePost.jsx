@@ -7,12 +7,19 @@ import { useState } from "react";
 import ConfirmCreate from "./ConfirmCreate";
 import axios from "axios";
 import Study from "./Study";
+import { useBookInfo } from "@/pages/_app";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
+import PostInfo from "./PostInfo";
 
 function CreatePost({ redirect }) {
+  const [user] = useAuthState(auth);
+  const activeUser = user.uid;
   const [openModal, setOpenModal] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showStep, setShowStep] = useState(1);
-  const [bookInfo, setBookInfo] = useState({
+
+  /* const [bookInfo, setBookInfo] = useState({
     condition: 0,
     image: "",
     link: "",
@@ -21,7 +28,9 @@ function CreatePost({ redirect }) {
     price: 0,
     sellerID: "",
     semester: 0,
-  });
+  }); */
+
+  const { bookInfo, setBookInfo, clearBookInfo } = useBookInfo();
 
   const [isbnInput, setIsbnInput] = useState("");
   async function getBookInfoFromISBN(isbn) {
@@ -38,12 +47,10 @@ function CreatePost({ redirect }) {
       const bookImage = data.imageLinks
         ? data.imageLinks.thumbnail
         : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNT0xwyLstvC7wH8jYIKur3GTcSq-g6fj2EbL4wk-qaONHYjBswa3rpFsZJeEjuXcG-lw&usqp=CAU";
-      setBookInfo({
-        ...bookInfo,
-        name: bookName,
-        link: previewLink,
-        image: bookImage,
-      });
+      setBookInfo("name", bookName);
+      setBookInfo("link", previewLink);
+      setBookInfo("image", bookImage);
+      setBookInfo("sellerID", activeUser);
       setShowStep(2);
     } catch (error) {
       setShowError(true);
@@ -69,6 +76,7 @@ function CreatePost({ redirect }) {
             data={bookInfo}
           />
         )}
+        {showStep >= 4 && <PostInfo />}
         <section className="flex flex-col items-center ">
           <ProgressBar step={1} />
           <div className="flex flex-col items-center pb-12">
@@ -76,10 +84,11 @@ function CreatePost({ redirect }) {
               Opret en annonce ved at indtaste ISBN nummeret
             </p>
             <Image
-              alt="#"
+              alt="Illustration af en person der indtaster et ISBN nummer"
               src="/isbn-illustration.png"
               width={300}
-              height={300}
+              height={0}
+              className="h-auto"
             />
           </div>
           <div className="flex flex-col items-center gap-y-3 pb-6">

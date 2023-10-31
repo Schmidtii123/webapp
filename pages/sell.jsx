@@ -4,9 +4,16 @@ import animationData from "../public/animation_lo42clyq.json";
 import BigButton from "../components/BigButton";
 import CreatePost from "../components/modal/CreatePost";
 import { useState } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { db } from "@/firebase/firebase";
+import { doc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/firebase";
 
 const Sell = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [user] = useAuthState(auth);
+  const activeUserID = user.uid;
 
   return (
     <>

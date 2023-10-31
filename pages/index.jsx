@@ -9,7 +9,7 @@ import { useFilterStore } from "./_app";
 export default function Home() {
   const [books, setBooks] = useState([]);
   const [openFilter, setOpenFilter] = useState(false);
-  const { filter } = useFilterStore();
+  const { filter, clearFilter } = useFilterStore();
 
   async function getData() {
     const data = await getAllBooks();
@@ -93,12 +93,19 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-around gap-y-4">
+        <div className="flex flex-wrap justify-start gap-y-4 pb-20">
           {books.length > 0 &&
             books
               .filter((book) =>
                 book.name.toLowerCase().includes(filterTerm.toLowerCase())
               )
+              .filter((book) => {
+                if (filter.semester.includes(book.semester)) {
+                  return book;
+                } else if (filter.semester.length === 0) {
+                  return book;
+                }
+              })
               .sort((a, b) => {
                 if (filterOptions.sort === "lowToHigh") {
                   return b.price - a.price;
@@ -108,22 +115,27 @@ export default function Home() {
                   return 0;
                 }
               })
-              .map((book) => (
+              .map((book, i) => (
                 <MarketplacePost
                   click={() => setSelectedBook(book.id)}
                   key={book.id}
                   img={book.image}
                   title={book.name}
                   price={book.price}
+                  isAlone={i === books.length - 1}
                 />
               ))}
         </div>
       </section>
       {openFilter && (
         <FilterModal
+          acceptChange={() => setOpenFilter(false)}
           currentOptions={filterOptions}
           onFilterChange={handleFilterChange}
-          redirect={() => setOpenFilter(false)}
+          redirect={() => {
+            setOpenFilter(false);
+            clearFilter();
+          }}
         />
       )}
     </>

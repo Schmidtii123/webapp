@@ -3,8 +3,14 @@ import { useState } from "react";
 import Breadcrum from "../Breadcrum";
 import ToggleFilter from "../ToggleFilter";
 import BigButton from "../BigButton";
+import { useFilterStore } from "@/pages/_app";
 
-const FilterModal = ({ redirect, onFilterChange, currentOptions }) => {
+const FilterModal = ({
+  redirect,
+  onFilterChange,
+  currentOptions,
+  acceptChange,
+}) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -39,14 +45,8 @@ const FilterModal = ({ redirect, onFilterChange, currentOptions }) => {
     "International Business",
     "Statskundskab",
   ];
-  const clearFilter = () => {
-    onFilterChange({
-      sort: "",
-      major: "",
-      semester: "",
-      stand: "",
-    });
-  };
+
+  const { clearFilter } = useFilterStore();
 
   const [openFilter, setOpenFilter] = useState(false);
 
@@ -89,37 +89,41 @@ const FilterModal = ({ redirect, onFilterChange, currentOptions }) => {
                 />
                 <datalist id="majors">
                   {majors.map((major, i) => (
-                    <option key={i} value={major.toUpperCase} />
+                    <option key={i} value={major} />
                   ))}
                 </datalist>
               </div>
               <div className="flex flex-col w-96">
                 <p className="text-lg font-medium mb-2">Vælg semester</p>
                 <div className="flex flex-wrap gap-2">
-                  <ToggleFilter
-                    click={handleInputChange}
-                    value={1}
-                    title="1. Semester"
-                  />
-                  <ToggleFilter value={2} title="2. Semester" />
-                  <ToggleFilter value={3} title="3. Semester" />
-                  <ToggleFilter value={4} title="4. Semester" />
-                  <ToggleFilter value={5} title="5. Semester" />
-                  <ToggleFilter value={6} title="6. Semester" />
+                  <ToggleFilter type="semester" value={1} title="1. Semester" />
+                  <ToggleFilter type="semester" value={2} title="2. Semester" />
+                  <ToggleFilter type="semester" value={3} title="3. Semester" />
+                  <ToggleFilter type="semester" value={4} title="4. Semester" />
+                  <ToggleFilter type="semester" value={5} title="5. Semester" />
+                  <ToggleFilter type="semester" value={6} title="6. Semester" />
                 </div>
               </div>
               <div className="flex flex-col w-96">
                 <p className="text-lg font-medium mb-2">Vælg stand</p>
                 <div className="flex flex-wrap gap-2 pb-4">
-                  <ToggleFilter title="Helt ny" />
-                  <ToggleFilter title="God, men brugt" />
-                  <ToggleFilter title="Slidt" />
-                  <ToggleFilter title="Skrevet i" />
+                  <ToggleFilter type="condition" value={1} title="Helt ny" />
+                  <ToggleFilter
+                    type="condition"
+                    value={2}
+                    title="God, men brugt"
+                  />
+                  <ToggleFilter type="condition" value={3} title="Slidt" />
+                  <ToggleFilter type="condition" value={4} title="Skrevet i" />
                 </div>
               </div>
-              <BigButton color="green" content="Filtrer bøger" />
               <BigButton
-                click={clearFilter}
+                click={acceptChange}
+                color="green"
+                content="Filtrer bøger"
+              />
+              <BigButton
+                click={redirect}
                 color="grey"
                 content="Nulstil filtre"
               />
