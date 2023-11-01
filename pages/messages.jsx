@@ -7,6 +7,7 @@ import { auth } from "@/firebase/firebase";
 import Conversation from "@/tabs/Conversation";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { getLiveMessages } from "@/firebase/firebase";
+import test from "./test";
 
 // Iterates through message object and checks for the ID that does not belong to the currently active user
 function filterObjectValuesWithID(obj, id) {
@@ -33,9 +34,11 @@ const Messageview = () => {
   const [showConversation, setShowConversation] = useState(false);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const activeUser = user.uid;
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get live messages
   async function getLiveChats() {
+    setIsLoading(true);
     try {
       getLiveMessages((chats) => {
         if (chats) {
@@ -56,6 +59,7 @@ const Messageview = () => {
       if (liveChats.length > 0 && convoID) {
         setSelectedConversation(liveChats.find((chat) => chat.id === convoID));
       }
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -67,6 +71,29 @@ const Messageview = () => {
 
   const [convoID, setConvoID] = useState(null);
   const [recieverName, setRecieverName] = useState(null);
+
+  if (isLoading)
+    return (
+      <div className="w-screen h-[100svh] flex flex-col items-center justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-40 h-40 animate-pulse text-medium-green"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+          />
+        </svg>
+        <h1 className="font-bold text-4xl text-medium-green animate-pulse">
+          BookBazr
+        </h1>
+      </div>
+    );
 
   return (
     <>
@@ -87,7 +114,7 @@ const Messageview = () => {
           className="w-80 font-medium text-lg text-center py-2 px-4 mx-auto bg-gray-200 rounded-md my-4"
           onClick={() => setFilterRead(!filterRead)}
         >
-          Vis kun nye beskeder
+          {filterRead ? "Vis alle beskeder" : "Vis kun ulæste beskeder"}
         </button>
         <div className="flex flex-col h-[75svh] overflow-y-scroll">
           {liveChats

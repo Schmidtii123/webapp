@@ -1,5 +1,4 @@
 import MarketplacePost from "@/components/explore/MarketplacePost";
-import SearchBar from "@/components/explore/SearchBar";
 import FilterModal from "@/components/modal/FilterModal";
 import { useEffect, useState } from "react";
 import { getAllBooks } from "@/firebase/firebase";
@@ -10,10 +9,17 @@ export default function Home() {
   const [books, setBooks] = useState([]);
   const [openFilter, setOpenFilter] = useState(false);
   const { filter, clearFilter } = useFilterStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   async function getData() {
-    const data = await getAllBooks();
-    setBooks(data);
+    setIsLoading(true);
+    try {
+      const data = await getAllBooks();
+      setBooks(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   }
   useEffect(() => {
     getData();
@@ -21,23 +27,29 @@ export default function Home() {
 
   const [filterTerm, setFilterTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState(null);
-  const [filterOptions, setFilterOptions] = useState({
-    sort: "",
-    major: "",
-    semester: 0,
-    condition: 0,
-  });
 
-  const handleFilterChange = (updatedOptions) => {
-    setFilterOptions((prevOptions) => ({
-      ...prevOptions,
-      ...updatedOptions,
-    }));
-  };
-
-  useEffect(() => {
-    console.log(filter);
-  }, [filter]);
+  if (isLoading)
+    return (
+      <div className="w-screen h-[100svh] flex flex-col items-center justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-40 h-40 animate-pulse text-medium-green"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+          />
+        </svg>
+        <h1 className="font-bold text-4xl text-medium-green animate-pulse">
+          BookBazr
+        </h1>
+      </div>
+    );
 
   return (
     <>
@@ -84,7 +96,7 @@ export default function Home() {
               </svg>
             </label>
             <input
-              type="text"
+              type="search"
               id="search"
               placeholder="Søg"
               className="bg-gray-200 pl-10 h-9 rounded-full w-full"
@@ -93,7 +105,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-start gap-y-4 pb-20">
+        <div className="flex flex-wrap justify-start gap-y-4 pb-20 ">
           {books.length > 0 &&
             books
               .filter((book) =>
@@ -106,10 +118,17 @@ export default function Home() {
                   return book;
                 }
               })
+              .filter((book) => {
+                if (filter.major === book.major) {
+                  return book;
+                } else if (filter.major.length === 0) {
+                  return book;
+                }
+              })
               .sort((a, b) => {
-                if (filterOptions.sort === "lowToHigh") {
+                if (filter.sort === "highToLow") {
                   return b.price - a.price;
-                } else if (filterOptions.sort === "highToLow") {
+                } else if (filter.sort === "lowToHigh") {
                   return a.price - b.price;
                 } else {
                   return 0;
@@ -130,11 +149,8 @@ export default function Home() {
       {openFilter && (
         <FilterModal
           acceptChange={() => setOpenFilter(false)}
-          currentOptions={filterOptions}
-          onFilterChange={handleFilterChange}
           redirect={() => {
             setOpenFilter(false);
-            clearFilter();
           }}
         />
       )}

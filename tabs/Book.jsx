@@ -16,12 +16,18 @@ import {
   getUserInfo,
 } from "@/firebase/firebase";
 import toast, { Toaster } from "react-hot-toast";
+import EditBook from "./EditBook";
 
 const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
-  const [snapshot, loading] = useDocument(doc(db, "books", docID));
+  const [snapshot, loading, error] = useDocument(doc(db, "books", docID));
+  const router = useRouter();
   let data;
   if (snapshot) {
     data = snapshot.data();
+  }
+
+  if (error) {
+    router.push("/");
   }
 
   const [sellerUsername, setSellerUsername] = useState("");
@@ -45,9 +51,14 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   let activeUserName;
   let sellerID;
   if (snapshot) {
-    activeUserID = user.uid;
-    activeUserName = user.displayName;
-    sellerID = data.sellerID;
+    try {
+      activeUserID = user.uid;
+      activeUserName = user.displayName;
+      sellerID = data.sellerID;
+    } catch (error) {
+      handleRemoveBook();
+      window.location.reload();
+    }
   }
 
   async function getSellerName() {
@@ -65,8 +76,6 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
       getSellerName();
     }
   }, [snapshot]);
-
-  const router = useRouter();
 
   async function handleContactSeller() {
     const conversationData = {
@@ -90,7 +99,7 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
     const id = snapshot.id;
     const name = data.name;
     try {
-      await addBookToSaved(id, name, activeUserID);
+      await addBookToSaved(id, name, activeUserID, data.image);
       toast.success("Bogen er gemt", {
         iconTheme: {
           primary: "#ffffff",
@@ -155,12 +164,20 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
     }
   }, [snapshot]);
 
+  const [selectedBook, setSelectedBook] = useState(null);
+
   if (snapshot)
     return (
       <div className="w-screen min-h-[100svh] fixed top-0 left-0 bg-slate-50 slide-from-right z-[9999]">
         <Toaster />
+        {selectedBook && (
+          <EditBook
+            docID={selectedBook}
+            redirect={() => setSelectedBook(null)}
+          />
+        )}
         <Breadcrum title="Opslag" destination={redirect} />
-        <section className="w-full h-full flex flex-col gap-y-4 pt-8">
+        <section className="w-full h-full flex flex-col gap-y-4 pt-8 bg-white">
           {/* Image wrapper */}
           <div className="w-[10rem] h-[14rem] m-auto">
             <img
@@ -194,7 +211,16 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
               <p>{getStandValue(data.condition)}</p>
             </div>
             <div className="flex w-full justify-center pt-2 gap-2">
-              {snapshot && user && (
+              {snapshot && user && activeUserID === data.sellerID && (
+                <BigButton
+                  click={() => {
+                    setSelectedBook(snapshot.id);
+                  }}
+                  content="Rediger opslag"
+                  color="green"
+                />
+              )}
+              {snapshot && user && activeUserID !== data.sellerID && (
                 <>
                   <BigButton
                     click={() => {

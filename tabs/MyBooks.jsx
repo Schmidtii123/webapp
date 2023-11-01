@@ -10,8 +10,9 @@ import { collection, query, where } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/firebase";
 import EditBook from "@/tabs/EditBook";
+import Breadcrum from "@/components/Breadcrum";
 
-const Sell = () => {
+const MyBooks = ({ redirect }) => {
   const [openModal, setOpenModal] = useState(false);
   const [user] = useAuthState(auth);
   const activeUserID = user.uid;
@@ -29,33 +30,9 @@ const Sell = () => {
     }));
   }
   const [selectedBook, setSelectedBook] = useState(null);
-  if (loading)
-    return (
-      <div className="w-screen h-[100svh] flex flex-col items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-40 h-40 animate-pulse text-medium-green"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-          />
-        </svg>
-        <h1 className="font-bold text-4xl text-medium-green animate-pulse">
-          BookBazr
-        </h1>
-      </div>
-    );
   return (
-    <>
-      <div className="flex pt-4">
-        <h2 className=" text-2xl font-bold ml-4">Sælg</h2>
-      </div>
+    <div className=" slide-in-right">
+      <Breadcrum title="Mine opslag" destination={redirect} />
       {snapshot && data.length === 0 && (
         <div className="flex flex-col items-center gap-8">
           <Lottie className=" w-52 pt-8" animationData={animationData} />
@@ -83,7 +60,7 @@ const Sell = () => {
             )}
             <h2 className="font-medium text-lg ml-4">Dine opslag</h2>
             {data.map((book, i) => (
-              <div key={i} className="w-full h-[8rem] flex fade-in">
+              <div key={i} className="w-full h-[8rem] flex">
                 <div className="h-full w-1/3 flex justify-center items-center overflow-hidden">
                   <img
                     src={book.image}
@@ -128,8 +105,8 @@ const Sell = () => {
       )}
 
       {openModal && <CreatePost redirect={() => setOpenModal(false)} />}
-    </>
+    </div>
   );
 };
 
-export default Sell;
+export default MyBooks;

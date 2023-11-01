@@ -63,6 +63,23 @@ export const useFilterStore = create((set) => ({
       },
     }));
   },
+  setSort: (newSort) => {
+    set((state) => ({
+      filter: {
+        ...state.filter,
+        sort: newSort,
+      },
+    }));
+  },
+  setMajor: (newMajor) => {
+    set((state) => ({
+      filter: {
+        ...state.filter,
+        major: newMajor,
+      },
+    }));
+  },
+
   setCondition: (newCondition) => {
     set((state) => ({
       filter: {
@@ -107,10 +124,6 @@ export default function App({ Component, pageProps }) {
   const handleLogin = () => {
     signInWithGoogle();
   };
-
-  useEffect(() => {
-    console.log(bookInfo);
-  }, [bookInfo]);
 
   if (loading)
     return (

@@ -88,7 +88,7 @@ Firestore (Database)
 */
 
 // Add books to user's saved_books array
-export async function addBookToSaved(bookID, bookName, userID) {
+export async function addBookToSaved(bookID, bookName, userID, bookImage) {
   try {
     const docRef = doc(db, "users", userID);
     const docSnap = await getDoc(docRef);
@@ -97,6 +97,7 @@ export async function addBookToSaved(bookID, bookName, userID) {
       const bookObj = {
         bookID: bookID,
         name: bookName,
+        image: bookImage,
       };
       const updatedBookList = [...currentBookList.saved_books, bookObj];
       await updateDoc(docRef, {
@@ -209,7 +210,6 @@ export async function updateBookByID(id, bookInfo) {
     console.log("Invalid ID, must be of type string");
     return null;
   }
-
   try {
     const docRef = doc(db, "books", id);
     const newBook = bookInfo;

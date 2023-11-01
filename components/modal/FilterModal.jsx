@@ -1,24 +1,11 @@
 import React from "react";
-import { useState } from "react";
 import Breadcrum from "../Breadcrum";
 import ToggleFilter from "../ToggleFilter";
 import BigButton from "../BigButton";
 import { useFilterStore } from "@/pages/_app";
 
-const FilterModal = ({
-  redirect,
-  onFilterChange,
-  currentOptions,
-  acceptChange,
-}) => {
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-
-    onFilterChange({ [name]: value });
-  };
-
+const FilterModal = ({ redirect, acceptChange }) => {
   const majors = [
-    "multimedie",
     "pædagog",
     "medicin",
     "sygeplejerske",
@@ -46,9 +33,11 @@ const FilterModal = ({
     "Statskundskab",
   ];
 
-  const { clearFilter } = useFilterStore();
-
-  const [openFilter, setOpenFilter] = useState(false);
+  const { setMajor, setSort, filter, clearFilter } = useFilterStore();
+  function handleClick() {
+    clearFilter();
+    redirect();
+  }
 
   return (
     <div>
@@ -64,13 +53,16 @@ const FilterModal = ({
                   Sorter efter
                 </label>
                 <select
-                  defaultValue={currentOptions.sort}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    setSort(e.target.value);
+                  }}
+                  defaultValue={filter.sort}
                   name="sort"
                   className="border border-oldman bg-white  rounded h-10"
                 >
-                  <option value="highToLow">Pris: lav til høj</option>
-                  <option value="lowToHigh">Pris: høj til lav</option>
+                  <option value="noSort">Vælg sortering:</option>
+                  <option value="lowToHigh">Pris: lav til høj</option>
+                  <option value="highToLow">Pris: høj til lav</option>
                 </select>
               </div>
               <div className="flex flex-col w-96">
@@ -78,10 +70,12 @@ const FilterModal = ({
                   Vælg uddannelse
                 </label>
                 <input
-                  defaultValue={currentOptions.major}
-                  onChange={handleInputChange}
+                  value={filter.major}
+                  onChange={(e) => {
+                    setMajor(e.target.value);
+                  }}
                   name="major"
-                  type="text"
+                  type="search"
                   placeholder="Indtast uddannelse"
                   autoComplete="on"
                   list="majors"
@@ -123,7 +117,7 @@ const FilterModal = ({
                 content="Filtrer bøger"
               />
               <BigButton
-                click={redirect}
+                click={handleClick}
                 color="grey"
                 content="Nulstil filtre"
               />
