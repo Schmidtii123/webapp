@@ -118,6 +118,12 @@ export const useFilterStore = create((set) => ({
   },
 }));
 
+export const useUnreadMessagesStore = create((set) => ({
+  unreadMessages: 0,
+  incrementUnreadMessages: () => set((state) => ({ unreadMessages: state.unreadMessages + 1 })),
+  resetUnreadMessages: () => set({ unreadMessages: 0 }),
+}));
+
 export default function App({ Component, pageProps }) {
   const { bookInfo } = useBookInfo();
   const [user, loading, error] = useAuthState(auth);

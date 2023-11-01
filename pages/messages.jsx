@@ -7,7 +7,8 @@ import { auth } from "@/firebase/firebase";
 import Conversation from "@/tabs/Conversation";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { getLiveMessages } from "@/firebase/firebase";
-import test from "./test";
+import { useUnreadMessagesStore } from "./_app";
+import MessageIsRead from "@/components/messages/MessageIsRead";
 
 // Iterates through message object and checks for the ID that does not belong to the currently active user
 function filterObjectValuesWithID(obj, id) {
@@ -35,6 +36,8 @@ const Messageview = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const activeUser = user.uid;
   const [isLoading, setIsLoading] = useState(true);
+
+  const { incrementUnreadMessages, resetUnreadMessages } = useUnreadMessagesStore();
 
   // Get live messages
   async function getLiveChats() {
@@ -69,6 +72,18 @@ const Messageview = () => {
     getLiveChats();
   }, []);
 
+  useEffect(() => {
+    let unreadMessageCount = 0;
+  
+    liveChats.forEach((message) => {
+      if (!message.is_read) {
+        unreadMessageCount++;
+      }
+    });
+    incrementUnreadMessages(unreadMessageCount);
+    console.log(unreadMessageCount) //altså den siger i console.log at antal ulæste beskeder passer, men det er ikke der der står i min MessageIsRead component. du er velkommen til at kigge det igennem, men vil selv fixe det i morgen ! >:(
+  }, [liveChats]);
+
   const [convoID, setConvoID] = useState(null);
   const [recieverName, setRecieverName] = useState(null);
 
@@ -97,6 +112,7 @@ const Messageview = () => {
 
   return (
     <>
+    <MessageIsRead />
       {showConversation && (
         <Conversation
           book={selectedConversation.book}
