@@ -9,6 +9,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { getLiveMessages } from "@/firebase/firebase";
 import { useUnreadMessagesStore } from "./_app";
 import MessageIsRead from "@/components/messages/MessageIsRead";
+import Head from "next/head";
 
 // Iterates through message object and checks for the ID that does not belong to the currently active user
 function filterObjectValuesWithID(obj, id) {
@@ -92,29 +93,37 @@ const Messageview = () => {
 
   if (isLoading)
     return (
-      <div className="w-screen h-[100svh] flex flex-col items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-40 h-40 animate-pulse text-medium-green"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-          />
-        </svg>
-        <h1 className="font-bold text-4xl text-medium-green animate-pulse">
-          BookBazr
-        </h1>
-      </div>
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <div className="w-screen h-[100svh] flex flex-col items-center justify-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-40 h-40 animate-pulse text-medium-green"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+            />
+          </svg>
+          <h1 className="font-bold text-4xl text-medium-green animate-pulse">
+            BookBazr
+          </h1>
+        </div>
+      </>
     );
 
   return (
     <>
+      <Head>
+        <title>BookBazr | Beskeder</title>
+      </Head>
       {showConversation && (
         <Conversation
           book={selectedConversation.book}

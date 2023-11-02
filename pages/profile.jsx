@@ -10,6 +10,7 @@ import SavedBooks from "@/tabs/SavedBooks";
 import EditBook from "@/tabs/EditBook";
 import MyBooks from "@/tabs/MyBooks";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const ProfileView = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -28,6 +29,9 @@ const ProfileView = () => {
   const router = useRouter();
   return (
     <>
+      <Head>
+        <title>Bookbazr | Profil</title>
+      </Head>
       <div className="flex flex-col w-screen h-[100svh] p-4 gap-4 overflow-x-hidden overflow-y-scroll">
         {showTab === "saved" && (
           <SavedBooks redirect={() => setShowTab("none")} />
