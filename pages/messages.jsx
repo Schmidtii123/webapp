@@ -37,7 +37,7 @@ const Messageview = () => {
   const activeUser = user.uid;
   const [isLoading, setIsLoading] = useState(true);
 
-  const { incrementUnreadMessages, resetUnreadMessages } = useUnreadMessagesStore();
+  const { incrementUnreadMessages, resetUnreadMessages, unreadMessages } = useUnreadMessagesStore();
 
   // Get live messages
   async function getLiveChats() {
@@ -73,15 +73,13 @@ const Messageview = () => {
   }, []);
 
   useEffect(() => {
-    let unreadMessageCount = 0;
-  
+    resetUnreadMessages();
     liveChats.forEach((message) => {
       if (!message.is_read) {
-        unreadMessageCount++;
+        incrementUnreadMessages();
       }
     });
-    incrementUnreadMessages(unreadMessageCount);
-    console.log(unreadMessageCount) //altså den siger i console.log at antal ulæste beskeder passer, men det er ikke der der står i min MessageIsRead component. du er velkommen til at kigge det igennem, men vil selv fixe det i morgen ! >:(
+    console.log(unreadMessages) 
   }, [liveChats]);
 
   const [convoID, setConvoID] = useState(null);
@@ -112,7 +110,6 @@ const Messageview = () => {
 
   return (
     <>
-    <MessageIsRead />
       {showConversation && (
         <Conversation
           book={selectedConversation.book}

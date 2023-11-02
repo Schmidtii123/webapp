@@ -5,9 +5,9 @@ const MessageIsRead = () => {
   const { unreadMessages } = useUnreadMessagesStore();
 
   return (
-    <>
-      {`Du har ${unreadMessages} nye beskeder`}
-    </>
+    <div className='bg-red-500 h-6 w-6 absolute text-center rounded-full text-white ml-10 mb-20'>
+      {`${unreadMessages}`}
+    </div>
   );
 };
 
