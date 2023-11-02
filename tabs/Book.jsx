@@ -21,6 +21,7 @@ import EditBook from "./EditBook";
 const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   const [snapshot, loading, error] = useDocument(doc(db, "books", docID));
   const router = useRouter();
+  const pathName = router.pathname;
   let data;
   if (snapshot) {
     data = snapshot.data();
@@ -179,7 +180,7 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
         <Breadcrum title="Opslag" destination={redirect} />
         <section className="w-full h-full flex flex-col gap-y-4 pt-8 bg-white">
           {/* Image wrapper */}
-          <div className="w-[10rem] h-[14rem] m-auto">
+          <div className="w-[9rem] h-[13rem] m-auto">
             <img
               className="w-full h-full object-cover border border-gray-300"
               src={data.image}
@@ -187,38 +188,48 @@ const Book = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
             />
           </div>
           <div className="flex flex-col ml-4">
-            <p className="text-2xl font-medium">{data.name}</p>
-            <p className="text-xl">{data.price} kr</p>
+            <p className="text-xl font-medium">{data.name}</p>
+            <p className="text-l">{data.price} kr</p>
           </div>
           {/* text wrapper */}
-          <div className="w-full flex h-80 flex-col items-start px-8 gap-2 text-lg bg-white py-4">
+          <div className="w-full flex h-80 flex-col items-start px-8 gap-2 text-lg bg-white py-2">
             <div className="flex flex-col">
               <p>
-                <span className="font-medium border-b-2">Studie:</span>
+                <span className="font-medium text-base border-b-2">
+                  Studie:
+                </span>
               </p>
-              <p>{data.major}</p>
+              <p className="text-base">{data.major}</p>
             </div>
             <div className="flex flex-col">
               <p>
-                <span className="font-medium border-b-2">Semester:</span>
+                <span className="font-medium text-base border-b-2">
+                  Semester:
+                </span>
               </p>
-              <p>{data.semester}.semester</p>
+              <p className="text-base">{data.semester}.semester</p>
             </div>
             <div className="flex flex-col">
               <p>
-                <span className="font-medium border-b-2">Stand:</span>{" "}
+                <span className="font-medium text-base border-b-2">Stand:</span>{" "}
               </p>
-              <p>{getStandValue(data.condition)}</p>
+              <p className="text-base">{getStandValue(data.condition)}</p>
             </div>
             <div className="flex w-full justify-center pt-2 gap-2">
-              {snapshot && user && activeUserID === data.sellerID && (
-                <BigButton
-                  click={() => {
-                    setSelectedBook(snapshot.id);
-                  }}
-                  content="Rediger opslag"
-                  color="green"
-                />
+              {snapshot &&
+                user &&
+                activeUserID === data.sellerID &&
+                pathName !== "/" && (
+                  <BigButton
+                    click={() => {
+                      setSelectedBook(snapshot.id);
+                    }}
+                    content="Rediger opslag"
+                    color="green"
+                  />
+                )}
+              {pathName === "/" && activeUserID === data.sellerID && (
+                <p className=" my-4 text-gray-700">Dette er dit eget opslag</p>
               )}
               {snapshot && user && activeUserID !== data.sellerID && (
                 <>

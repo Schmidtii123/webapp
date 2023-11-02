@@ -14,7 +14,7 @@ const ConfirmCreate = ({ redirect, data, changeStep }) => {
         <section>
           <Breadcrum title="Bekræft bog" destination={redirect} />
           <ProgressBar step={1} />
-          <div className="w-full flex flex-col items-center py-8 gap-6">
+          <div className="w-full flex flex-col items-center py-4 gap-4">
             {/* Image wrapper */}
             <div className="w-40 h-60 border border-gray-300">
               <img

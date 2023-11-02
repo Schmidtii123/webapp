@@ -47,7 +47,7 @@ const FilterModal = ({ redirect, acceptChange }) => {
             <div className="flex w-full relative justify-center">
               <Breadcrum title="Filter" destination={redirect} icon="close" />
             </div>
-            <div className="flex flex-col justify-start items-center gap-8 pt-10">
+            <div className="flex flex-col justify-start items-center gap-6 pt-4">
               <div className="flex flex-col w-96">
                 <label htmlFor="" className="text-lg font-medium">
                   Sorter efter

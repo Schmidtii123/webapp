@@ -62,7 +62,7 @@ const Study = ({ redirect, data, changeStep, props }) => {
         <div>
           <Breadcrum title="Studie" destination={redirect} />
           <ProgressBar step={2} />
-          <div className="flex flex-col px-10 pt-10 gap-y-10">
+          <div className="flex flex-col px-10 pt-6 gap-y-10">
             <h2>
               Lad os starte med det grundlæggende. Vælg dit studie og semester{" "}
             </h2>
@@ -112,7 +112,7 @@ const Study = ({ redirect, data, changeStep, props }) => {
           )}
 
           {selectedMajor && (
-            <div className="flex pt-3 pr-16 border-b-2 mx-8 pb-2">
+            <div className="flex pt-3 pl-12 border-b-2 pb-2 fade-in">
               <div
                 className="flex items-center gap-x-2 px-4 py-2 bg-gray-200 rounded-full w-max cursor-pointer hover:bg-gray-300"
                 onClick={() => {
@@ -140,7 +140,7 @@ const Study = ({ redirect, data, changeStep, props }) => {
             </div>
           )}
           {selectedMajor && (
-            <div className="flex flex-col pt-6">
+            <div className="flex flex-col pt-6 fade-in">
               <p className="px-8 pb-4 mr-12">
                 Vælg hvilke semestere bøgerne er blevet brugt
               </p>
@@ -229,7 +229,7 @@ const Study = ({ redirect, data, changeStep, props }) => {
           )}
 
           {selectedMajor && (
-            <div className="flex flex-col items-center gap-y-4 pt-24 ">
+            <div className="flex flex-col items-center gap-y-4 pt-8 fade-in ">
               <BigButton
                 color="green"
                 content="Næste"

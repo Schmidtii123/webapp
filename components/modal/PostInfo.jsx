@@ -50,9 +50,8 @@ function PostInfo({ redirect }) {
         <section className="flex flex-col items-center ">
           <Breadcrum title="Opret annonce" destination={redirect} />
           <ProgressBar step={3} />
-
-          <div className="flex flex-col items-center justify-between gap-y-3 pb-6 h-15 mt-20">
-            <p className=" text-center w-72 pb-6 text-m">
+          <div className="flex flex-col items-center justify-between gap-y-3 h-15 mt-16">
+            <p className=" text-center w-72 pb-6 text-xl">
               Til sidst skal du angive pris og stand på din bog
             </p>
             <input
@@ -68,7 +67,7 @@ function PostInfo({ redirect }) {
             <select
               name="stand"
               id="stand"
-              className="border-b-2 border-oldman w-72 palceholder-font-black mb-5 pb-1"
+              className="border-b-2 border-oldman w-72 palceholder-font-black pb-1"
               defaultValue={0}
               onChange={(e) => {
                 const valueAsNumber = parseInt(e.target.value);
@@ -88,7 +87,7 @@ function PostInfo({ redirect }) {
                 Du kan altid ændre pris og stand på din bog senere
               </p>
             </div>
-            <div className="flex flex-col justify-center w-72">
+            <div className="flex flex-col justify-center w-72 pt-10">
               <p className="mb-5 self-start">
                 <span className="font-semibold mr-2">Uddannelse:</span>
                 {bookInfo.major}

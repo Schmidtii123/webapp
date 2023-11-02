@@ -92,7 +92,6 @@ function CreatePost({ redirect }) {
             />
           </div>
           <div className="flex flex-col items-center gap-y-3 pb-6">
-            <p>eller</p>
             <input
               onChange={(e) => setIsbnInput(e.target.value)}
               type="text"

@@ -9,7 +9,7 @@ import {
   removeBookFromSaved,
   updateDoc,
 } from "@/firebase/firebase";
-import { doc } from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -53,7 +53,7 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   }
 
   const [sellerUsername, setSellerUsername] = useState("");
-
+  const [isDeleting, setIsDeleting] = useState(false);
   function updateBookInfo() {
     try {
       updateBookByID(docID, newBookInfo);
@@ -73,24 +73,12 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
     }
   }
 
-  function deleteBook() {
+  async function deleteBook() {
+    setIsDeleting(true);
     try {
-      deleteBookByID(docID);
+      await deleteBookByID(docID);
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  function getStandValue(stand_n) {
-    switch (stand_n) {
-      case 1:
-        return "Helt ny";
-      case 2:
-        return "God, men brugt";
-      case 3:
-        return "Slidt";
-      case 4:
-        return "Skrevet i";
     }
   }
 
@@ -198,16 +186,36 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
     }
   }, [snapshot]);
 
-  if (error) {
-    router.push("/");
-  } else if (snapshot && !error)
+  if (isDeleting)
+    return (
+      <div className="w-screen h-[100svh] flex flex-col items-center justify-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-40 h-40 animate-pulse text-medium-green"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+          />
+        </svg>
+        <h1 className="font-bold text-4xl text-medium-green animate-pulse">
+          BookBazr
+        </h1>
+      </div>
+    );
+  else if (snapshot)
     return (
       <div className="w-screen min-h-[100svh] fixed top-0 left-0 bg-slate-50 slide-from-right z-[9999]">
         <Toaster />
         <Breadcrum title="Rediger opslag" destination={redirect} />
-        <div className="w-full h-full flex flex-col gap-y-4 pt-8 bg-white">
+        <div className="w-full h-full flex flex-col gap-y-2 pt-8 bg-white">
           {/* Image wrapper */}
-          <div className="w-[10rem] h-[14rem] m-auto">
+          <div className="w-[8rem] h-[10rem] m-auto">
             <img
               className="w-full h-full object-cover border border-gray-300"
               src={data.image}
@@ -215,16 +223,16 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
             />
           </div>
           <div className="flex flex-col ml-4">
-            <p className="text-2xl font-medium">{data.name}</p>
+            <p className="text-xl font-medium">{data.name}</p>
           </div>
           {/* text wrapper */}
-          <div className="w-full flex h-80 flex-col items-start px-8 gap-6 text-lg bg-white py-4">
+          <div className="w-full flex h-80 flex-col items-start px-8 gap-6 text-lg bg-white">
             <div className="flex flex-row">
-              <span className="font-semibold border-b-2">Pris:</span>
+              <span className="font-semibold  ">Pris:</span>
               <input
                 type="number"
                 placeholder={data.price}
-                className="text-xl w-16 text-end pr-2"
+                className="w-10 text-end border-b-2  pr-2 ml-2"
                 onChange={(e) => {
                   const valueAsNumber = parseInt(e.target.value);
                   setNewBookInfo({
@@ -233,18 +241,18 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
                   });
                 }}
               />
-              <p className="text-lg ">Kr.</p>
+              <p className=" ">kr.</p>
             </div>
             <div className="flex flex-row gap-x-2">
               <p>
-                <span className="font-semibold border-b-2">Studie:</span>
+                <span className="font-semibold ">Studie:</span>
               </p>
               <div className="flex items-center">
                 <input
                   type="text"
                   list="majors"
                   placeholder={data.major}
-                  className=""
+                  className="text-base border-b-2 w-52"
                   onChange={(e) => {
                     setNewBookInfo({
                       ...newBookInfo,
@@ -261,8 +269,9 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-semibold border-b-2">Semester:</span>
+                <span className="font-semibold text-base">Semester:</span>
                 <select
+                  className="text-base"
                   defaultValue={data.semester}
                   onChange={(e) => {
                     setNewBookInfo({
@@ -282,9 +291,9 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
             </div>
             <div className="flex flex-row gap-x-1">
               <p>
-                <span className="font-semibold border-b-2">Stand:</span>{" "}
+                <span className="font-semibold text-base">Stand:</span>{" "}
               </p>
-              <select>
+              <select className="text-base">
                 <option value={1}>Helt ny</option>
                 <option value={2}>God, men brugt</option>
                 <option value={3}>Slidt</option>
@@ -300,7 +309,11 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
               <BigButton
                 content="Slet opslag"
                 color="red"
-                click={() => deleteBook()}
+                click={(e) => {
+                  e.preventDefault();
+                  setIsDeleting(true);
+                  deleteBook();
+                }}
               />
             </div>
           </div>

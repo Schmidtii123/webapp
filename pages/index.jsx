@@ -105,7 +105,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-start gap-y-4 pb-20 ">
+        <div className="flex flex-wrap justify-start gap-y-4 pb-20 fade-in">
           {books.length > 0 &&
             books
               .filter((book) =>

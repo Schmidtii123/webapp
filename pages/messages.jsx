@@ -37,7 +37,8 @@ const Messageview = () => {
   const activeUser = user.uid;
   const [isLoading, setIsLoading] = useState(true);
 
-  const { incrementUnreadMessages, resetUnreadMessages, unreadMessages } = useUnreadMessagesStore();
+  const { incrementUnreadMessages, resetUnreadMessages, unreadMessages } =
+    useUnreadMessagesStore();
 
   // Get live messages
   async function getLiveChats() {
@@ -74,12 +75,16 @@ const Messageview = () => {
 
   useEffect(() => {
     resetUnreadMessages();
-    liveChats.forEach((message) => {
-      if (!message.is_read) {
-        incrementUnreadMessages();
-      }
-    });
-    console.log(unreadMessages) 
+    liveChats
+      .filter((message) => {
+        return message.userIDs.includes(activeUser);
+      })
+      .forEach((message) => {
+        if (!message.is_read) {
+          incrementUnreadMessages();
+        }
+      });
+    console.log(unreadMessages);
   }, [liveChats]);
 
   const [convoID, setConvoID] = useState(null);
@@ -129,7 +134,7 @@ const Messageview = () => {
         >
           {filterRead ? "Vis alle beskeder" : "Vis kun ulæste beskeder"}
         </button>
-        <div className="flex flex-col h-[75svh] overflow-y-scroll">
+        <div className="flex flex-col h-[75svh] overflow-y-scroll pb-4 fade-in">
           {liveChats
             ?.filter((message) => {
               if (filterRead) {

@@ -81,7 +81,7 @@ const Sell = () => {
                 redirect={() => setSelectedBook(null)}
               />
             )}
-            <h2 className="font-medium text-lg ml-4">Dine opslag</h2>
+            <h2 className="font-medium text-xl ml-4 ">Dine opslag</h2>
             {data.map((book, i) => (
               <div key={i} className="w-full h-[8rem] flex fade-in">
                 <div className="h-full w-1/3 flex justify-center items-center overflow-hidden">
