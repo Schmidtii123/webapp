@@ -2,6 +2,7 @@ import React, { use } from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import MessageIsRead from "./messages/MessageIsRead";
 
 const icons = {
   discover: {
@@ -165,6 +166,7 @@ const NavBar = () => {
           active === "messages" ? "text-font-black" : "text-gray-400"
         }`}
       >
+        <MessageIsRead />
         {active === "messages" ? icons.messages.active : icons.messages.default}
         <p className="font-light text-xs">Beskeder</p>
       </Link>

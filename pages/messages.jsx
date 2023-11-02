@@ -7,7 +7,8 @@ import { auth } from "@/firebase/firebase";
 import Conversation from "@/tabs/Conversation";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { getLiveMessages } from "@/firebase/firebase";
-import test from "./test";
+import { useUnreadMessagesStore } from "./_app";
+import MessageIsRead from "@/components/messages/MessageIsRead";
 
 // Iterates through message object and checks for the ID that does not belong to the currently active user
 function filterObjectValuesWithID(obj, id) {
@@ -35,6 +36,8 @@ const Messageview = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const activeUser = user.uid;
   const [isLoading, setIsLoading] = useState(true);
+
+  const { incrementUnreadMessages, resetUnreadMessages, unreadMessages } = useUnreadMessagesStore();
 
   // Get live messages
   async function getLiveChats() {
@@ -68,6 +71,16 @@ const Messageview = () => {
   useEffect(() => {
     getLiveChats();
   }, []);
+
+  useEffect(() => {
+    resetUnreadMessages();
+    liveChats.forEach((message) => {
+      if (!message.is_read) {
+        incrementUnreadMessages();
+      }
+    });
+    console.log(unreadMessages) 
+  }, [liveChats]);
 
   const [convoID, setConvoID] = useState(null);
   const [recieverName, setRecieverName] = useState(null);
