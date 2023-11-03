@@ -1,3 +1,5 @@
+// Karl
+// En søgefunktion der kører på et input felt type text, hvor der onChange bliver taget value af inputefeltet og smider det i et filterTerm i index.
 import React, { useState, useEffect } from "react";
 
 const SearchBar = ({ søgeFunktion }) => {

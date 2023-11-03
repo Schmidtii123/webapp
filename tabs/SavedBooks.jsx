@@ -1,3 +1,8 @@
+/* 
+  Simon
+  Dette component viser brugerens gemte bøger. Her bruges der react-firebase-hooks til at håndtere Firestore databasen og appens authentication.
+*/
+
 import { useDocument } from "react-firebase-hooks/firestore";
 import { db, auth } from "@/firebase/firebase";
 import { doc } from "firebase/firestore";
@@ -5,7 +10,6 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Breadcrum from "@/components/Breadcrum";
 import Book from "./Book";
-import { removeBookFromSaved } from "@/firebase/firebase";
 
 const SavedBooks = ({ redirect }) => {
   const [user] = useAuthState(auth);
@@ -15,28 +19,6 @@ const SavedBooks = ({ redirect }) => {
     savedBooks = snapshot.data().saved_books;
   }
   const [selectedBook, setSelectedBook] = useState(null);
-
-  async function handleRemoveBook() {
-    const id = snapshot.id;
-    const userID = activeUserID;
-    try {
-      await removeBookFromSaved(id, userID);
-      toast.success("Bogen er fjernet fra gemte opslag", {
-        iconTheme: {
-          primary: "#ffffff",
-          secondary: "#79AC78",
-        },
-        style: {
-          borderRadius: "10px",
-          background: "#79AC78",
-          color: "#ffffff",
-        },
-      });
-      setIsSaved(false);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   if (snapshot)
     return (

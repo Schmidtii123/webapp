@@ -1,16 +1,19 @@
+// Karl
+// Et komponent der indeholder hele modal'en til filtrering på Opdag siden.
 import React from "react";
 import Breadcrum from "../Breadcrum";
 import ToggleFilter from "../ToggleFilter";
 import BigButton from "../BigButton";
 import { useFilterStore } from "@/pages/_app";
 
+// Hardcoded array med uddannelser, da der ingen offenligt tilgængelige API'er eller .json filer fandtes.
 const FilterModal = ({ redirect, acceptChange }) => {
   const majors = [
-    "pædagog",
-    "medicin",
-    "sygeplejerske",
-    "psykologi",
-    "diplomingeniør",
+    "Pædagog",
+    "Medicin",
+    "Sygeplejerske",
+    "Psykologi",
+    "Diplomingeniør",
     "Folkeskolelærer",
     "socialrådgiver",
     "Civilingeniør",
@@ -33,7 +36,9 @@ const FilterModal = ({ redirect, acceptChange }) => {
     "Statskundskab",
   ];
 
+  // Impoterer fra zustand i _app.js
   const { setMajor, setSort, filter, clearFilter } = useFilterStore();
+  // Håndterer hvilke funktioner der skal køres på onClick på nulstil filtre knappen, længest nede.
   function handleClick() {
     clearFilter();
     redirect();
@@ -49,6 +54,12 @@ const FilterModal = ({ redirect, acceptChange }) => {
             </div>
             <div className="flex flex-col justify-start items-center gap-6 pt-4">
               <div className="flex flex-col w-96">
+                {/* 
+
+                En sortering til sortering af prisen - ingen sortering, lav til høj eller høj til lav.
+                På onChange bliver zustand-objektet opdateret med setSort, hvor objektet bliver deconstructet (...) og keyen "sort" bliver sat til enten, noSort, lowToHigh eller highToLow
+
+                */}
                 <label htmlFor="" className="text-lg font-medium">
                   Sorter efter
                 </label>
@@ -66,6 +77,11 @@ const FilterModal = ({ redirect, acceptChange }) => {
                 </select>
               </div>
               <div className="flex flex-col w-96">
+                {/* 
+                
+                Det samme sker ved uddannelse, hvor der onChange bliver setMajor gennem zustand, som deconstructer (...) og Major key'en bliver opdateret til værdien af inputfeltet.
+                  
+                */}
                 <label htmlFor="" className="text-lg font-medium">
                   Vælg uddannelse
                 </label>
@@ -81,6 +97,11 @@ const FilterModal = ({ redirect, acceptChange }) => {
                   list="majors"
                   className="border-b-2 outline-none border-oldman rounded-none h-10"
                 />
+                {/* 
+                
+                Her bliver vores dataliste til inputtet fyldt med en .map method fra vores hardcoded major-liste.
+                
+                */}
                 <datalist id="majors">
                   {majors.map((major, i) => (
                     <option key={i} value={major} />
@@ -88,6 +109,9 @@ const FilterModal = ({ redirect, acceptChange }) => {
                 </datalist>
               </div>
               <div className="flex flex-col w-96">
+                {/* 
+                Her kan man vælge semester via ToggleFilter komponentet, alle semestre har en value, som bliver passeret videre, for at sikre funktionalitet
+                */}
                 <p className="text-lg font-medium mb-2">Vælg semester</p>
                 <div className="flex flex-wrap gap-2">
                   <ToggleFilter type="semester" value={1} title="1. Semester" />
@@ -101,6 +125,9 @@ const FilterModal = ({ redirect, acceptChange }) => {
               <div className="flex flex-col w-96">
                 <p className="text-lg font-medium mb-2">Vælg stand</p>
                 <div className="flex flex-wrap gap-2 pb-4">
+                  {/* 
+                  Her bliver standen valgt med komponentet ToggleFilter, med en value, som passeres videre.
+                   */}
                   <ToggleFilter type="condition" value={1} title="Helt ny" />
                   <ToggleFilter
                     type="condition"
@@ -111,6 +138,8 @@ const FilterModal = ({ redirect, acceptChange }) => {
                   <ToggleFilter type="condition" value={4} title="Skrevet i" />
                 </div>
               </div>
+              {/* 
+              BigButton komponentet bliver her brugt til at enten comfirm de påsatte filtre, eller nulstille dem, med henholdsvis {acceptChange} og {handleClick}, som er beskrevet længere oppe. */}
               <BigButton
                 click={acceptChange}
                 color="green"

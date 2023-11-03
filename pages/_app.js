@@ -1,3 +1,7 @@
+/* 
+Simon og Karl
+*/
+
 import "@/styles/globals.css";
 import NavBar from "@/components/NavBar";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -6,6 +10,7 @@ import Login from "@/components/Login";
 import { Poppins } from "next/font/google";
 import { signInWithGoogle } from "@/firebase/firebase";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -13,6 +18,12 @@ const poppins = Poppins({
 });
 
 import { create } from "zustand";
+
+/*  
+  Brug af biblioteket "Zustand" for at styre state gennem hele applikationen, uden
+  at skulle lave props-drilling. 
+
+*/
 
 export const useBookInfo = create((set) => ({
   bookInfo: {
@@ -120,12 +131,13 @@ export const useFilterStore = create((set) => ({
 
 export const useUnreadMessagesStore = create((set) => ({
   unreadMessages: 0,
-  incrementUnreadMessages: () => set((state) => ({ unreadMessages: state.unreadMessages + 1 })),
+  incrementUnreadMessages: () =>
+    set((state) => ({ unreadMessages: state.unreadMessages + 1 })),
   resetUnreadMessages: () => set({ unreadMessages: 0 }),
 }));
 
 export default function App({ Component, pageProps }) {
-  const { bookInfo } = useBookInfo();
+  /* Hook fra React-firebase-hooks biblioteket der styrer appens Authentication */
   const [user, loading, error] = useAuthState(auth);
   const handleLogin = () => {
     signInWithGoogle();
@@ -155,10 +167,15 @@ export default function App({ Component, pageProps }) {
     );
   else if (user !== null) {
     return (
-      <div className={poppins.className}>
-        <Component {...pageProps} />
-        <NavBar />
-      </div>
+      <>
+        <Head>
+          <link rel="icon" href="/icon.png" sizes="any" />
+        </Head>
+        <div className={poppins.className}>
+          <Component {...pageProps} />
+          <NavBar />
+        </div>
+      </>
     );
   } else if (user === null) {
     return (

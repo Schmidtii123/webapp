@@ -1,3 +1,9 @@
+/*
+Emil, Simon og Nicolai
+
+Koden på siden opretter en side for brugere, som gerne vil sælge en bog. Der bliver hentet data fra en firestore database, og afhængigt af om brugeren har
+nogen bøger til salg. Brugeren kan åbne en modal for at oprette en ny annonce   */
+
 import React from "react";
 import Lottie from "lottie-react";
 import animationData from "../public/animation_lo42clyq.json";
@@ -11,6 +17,11 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/firebase";
 import EditBook from "@/tabs/EditBook";
 import Head from "next/head";
+
+/* Ovenfor ses de nødvendige biblioteker og komponenter som er impoteret. Lottie react er impoteret for at give muligheden for at
+kunne ændre i svg-animationen, hvor animationData importeres fra en JSON-fil. useState bliver brugt til at oprette en state-variablen "openModal"
+
+useCollection og useAuthState importeres fra react-firebase-hooks. De bliver brugt til at håndtere Firestore databasen og brugerens godkendelsesstatus. */
 
 const Sell = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -29,6 +40,16 @@ const Sell = () => {
       ...doc.data(),
     }));
   }
+  /* 
+Der oprettes en firestore-datforspørgsel ved hjælp af Firebase Firestore API. 
+Forespørgslen søger i "books"-samlingen og filterer ved at samligne "sellerID" med brugerens ID (activeUserID).
+
+Data fra firestore forspørgslen bliver behandlet med en useCollection-hook. Dette giver adgang til snapshot, loading og error. 
+Hvis at snapshot er gældende bliver data formateret ved at map hvert dokument i snapshot til et objekt med id og dataen. 
+Hvis siden loader, vises en hurtig "loading" side med animation.
+
+*/
+
   const [selectedBook, setSelectedBook] = useState(null);
   if (loading)
     return (
@@ -57,6 +78,11 @@ const Sell = () => {
         </div>
       </>
     );
+  /* 
+ I komponentet "Sell" bliver en række statevariabler benyttet. Herunder "openModal", "user", "activeUserID", "collectionWithQuery", "snapshot", "loading", "data", 
+ og "selectedBooks". De bliver defineret ved hjælp af useState-hooks og firebase-hooks.
+ */
+
   return (
     <>
       <Head>
@@ -122,6 +148,10 @@ const Sell = () => {
                   </button>
                 </div>
               </div>
+              /* 
+              "Opret annonce" knappen bliver brugt til at åbne modalen ved at værdien i "openModal" bliver ændre til "true". 
+              Createpost modalen bliver vist hvis dette er sandt
+              */
             ))}
             <div className=" fixed bottom-20 w-full flex justify-center">
               <BigButton

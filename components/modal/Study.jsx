@@ -14,11 +14,11 @@ const Study = ({ redirect, data, changeStep, props }) => {
   const [semesterValue, setSemesterValue] = useState(0);
 
   const majors = [
-    "pædagog",
-    "medicin",
-    "sygeplejerske",
-    "psykologi",
-    "diplomingeniør",
+    "Pædagog",
+    "Medicin",
+    "Sygeplejerske",
+    "Psykologi",
+    "Diplomingeniør",
     "Folkeskolelærer",
     "socialrådgiver",
     "Civilingeniør",

@@ -1,3 +1,4 @@
+// Karl, Simon &
 import MarketplacePost from "@/components/explore/MarketplacePost";
 import FilterModal from "@/components/modal/FilterModal";
 import { useEffect, useState } from "react";
@@ -22,8 +23,12 @@ export default function Home() {
       console.log(error);
     }
   }
+
+  const key = process.env.NEXT_PUBLIC_API_KEY;
+
   useEffect(() => {
     getData();
+    console.log(key);
   }, []);
 
   const [filterTerm, setFilterTerm] = useState("");
@@ -65,7 +70,7 @@ export default function Home() {
       {selectedBook && (
         <Book docID={selectedBook} redirect={() => setSelectedBook(null)} />
       )}
-      <section className="fixed flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
+      <div className="fixed flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
         <h1 className="text-2xl font-bold ml-4">Opdag</h1>
         <div className="flex justify-between pr-4 pl-4 pb-4 flex-center">
           {/* Filter SVG */}
@@ -154,7 +159,7 @@ export default function Home() {
                 />
               ))}
         </div>
-      </section>
+      </div>
       {openFilter && (
         <FilterModal
           acceptChange={() => setOpenFilter(false)}

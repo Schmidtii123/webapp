@@ -1,3 +1,8 @@
+/* 
+  Simon  
+  Firebase fil som indeholder alle vores egne funktioner til at interagere med databasen.
+*/
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -15,8 +20,10 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBSTT34mXJ0y79agjqsk0B9rs9lshHuyk8",
+  apiKey: apiKey,
   authDomain: "bookbazr.firebaseapp.com",
   projectId: "bookbazr",
   storageBucket: "bookbazr.appspot.com",

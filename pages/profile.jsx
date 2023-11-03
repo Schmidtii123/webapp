@@ -1,3 +1,8 @@
+/* 
+  Simon
+  Siden er lavet med react-firebase-hooks til at styre auth, brugerinfo og log ud funktionalitet. 
+*/
+
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";

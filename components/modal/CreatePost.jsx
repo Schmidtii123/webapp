@@ -1,3 +1,4 @@
+// Simon, Emil og Nicolai
 import React from "react";
 import ProgressBar from "./modalcomp/ProgressBar";
 import Breadcrum from "../Breadcrum";
@@ -18,17 +19,6 @@ function CreatePost({ redirect }) {
   const [openModal, setOpenModal] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showStep, setShowStep] = useState(1);
-
-  /* const [bookInfo, setBookInfo] = useState({
-    condition: 0,
-    image: "",
-    link: "",
-    major: "",
-    name: "",
-    price: 0,
-    sellerID: "",
-    semester: 0,
-  }); */
 
   const { bookInfo, setBookInfo, clearBookInfo } = useBookInfo();
 
@@ -77,7 +67,7 @@ function CreatePost({ redirect }) {
           />
         )}
         {showStep >= 4 && <PostInfo />}
-        <section className="flex flex-col items-center ">
+        <div className="flex flex-col items-center ">
           <ProgressBar step={1} />
           <div className="flex flex-col items-center pb-12">
             <p className=" w-72 pb-6">
@@ -112,7 +102,7 @@ function CreatePost({ redirect }) {
             />
             <BigButton color="grey" content="Annuller" click={redirect} />
           </div>
-        </section>
+        </div>
       </div>
     </>
   );

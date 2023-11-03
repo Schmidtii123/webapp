@@ -134,7 +134,7 @@ const Messageview = () => {
           redirect={() => setShowConversation(false)}
         />
       )}
-      <section className="flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
+      <div className="flex flex-col w-screen h-[100svh] py-4 gap-4 overflow-x-hidden overflow-y-scroll">
         <h1 className="text-2xl font-bold ml-4">Beskeder</h1>
         {/* Message wrapper */}
         <button
@@ -182,7 +182,7 @@ const Messageview = () => {
               />
             ))}
         </div>
-      </section>
+      </div>
     </>
   );
 };

@@ -1,3 +1,8 @@
+/* 
+  Simon
+  Liste over brugerens egne bøger. De er hentet med react-firebase-hooks og bliver filtreret med query importeret fra firebase/firestore.
+*/
+
 import React from "react";
 import Lottie from "lottie-react";
 import animationData from "../public/animation_lo42clyq.json";

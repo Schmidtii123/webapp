@@ -1,3 +1,8 @@
+// Karl & Simon
+// Et component der viser login siden, hvor der bliver gjort brug af BigButton til at kunne logge ind med google, via loginFunction, som bliver håndteret i _app.js, hvor det er benyttet Firebase authentication.
+
+// Note: Det er ikke muligt at logge ind på siden med andet end Google - projektet kan IKKE tilgåes uden login.
+
 import React from "react";
 import BigButton from "@/components/BigButton";
 import Image from "next/image";

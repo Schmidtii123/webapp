@@ -1,3 +1,5 @@
+// Karl
+// Et komponent der viser en knap til filtrering og håndterer dele af logikken. Der benyttes zustand, props og
 import React, { useState, useEffect } from "react";
 import { useFilterStore } from "@/pages/_app";
 

@@ -1,3 +1,9 @@
+/* 
+  Simon.
+
+  Jeg har brugt React-firebase-hooks til at få live opdateringer af samtalerne. Derudover har jeg brugt Firestores egne metoder til at opdatere dataen i databasen når brugere skriver, eller læser beskederne.
+*/
+
 import React from "react";
 import Breadcrum from "@/components/Breadcrum";
 import { useState, useEffect } from "react";
@@ -39,7 +45,7 @@ const Conversation = ({ data, redirect, ID, uid, name, book }) => {
 
   // Handle sending messages
   const currentDate = new Date();
-  const danishTimeOffset = +120;
+  const danishTimeOffset = +60;
   currentDate.setMinutes(currentDate.getMinutes() + danishTimeOffset);
 
   const [messageInfo, setMessageInfo] = useState({

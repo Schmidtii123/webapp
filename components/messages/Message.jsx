@@ -1,3 +1,10 @@
+/* 
+
+Simon
+Dette component bruges til at vise en samtale i listen over samtaler under message siden. 
+
+*/
+
 import React from "react";
 
 const Message = (props) => {

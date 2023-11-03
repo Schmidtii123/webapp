@@ -1,3 +1,4 @@
+// Emil og Simon
 import React from "react";
 import ProgressBar from "./modalcomp/ProgressBar";
 import Breadcrum from "../Breadcrum";
@@ -10,19 +11,26 @@ import { addBook } from "@/firebase/firebase";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 
+// Håndterer hvilke funktioner der skal køres på onClick.
 function PostInfo({ redirect }) {
   const handleClick = () => {
     window.location.reload();
   };
-
+  /* Håndtere hvordan modalen kører, og henter bookinfo information, så det er muligt at bruge useBookInfo i koden */
   const [openModal, setOpenModal] = useState(false);
   const { bookInfo, setBookInfo, clearBookInfo } = useBookInfo();
   const router = useRouter();
 
   async function addBookToDB() {
+    {
+      /*/ her vil try funktionen fange og behandle eventuelle fejl */
+    }
     try {
       const response = await addBook(bookInfo);
       console.log(response);
+      {
+        /* Toast er en pop up meddelelse til at bekræfte brugeren i at deres annonce er blevet oprettet, */
+      }
       toast.success("Annonce oprettet", {
         iconTheme: {
           primary: "#ffffff",
@@ -34,6 +42,9 @@ function PostInfo({ redirect }) {
           color: "#ffffff",
         },
       });
+      {
+        /* clearBookInfo fjerner så informationen og gør klar til eventuel ny oprettelse, med nye informationer i formularen */
+      }
       clearBookInfo();
       setTimeout(() => {
         router.push("/");
@@ -47,8 +58,9 @@ function PostInfo({ redirect }) {
     <>
       <div className="slide-from-right fixed inset-0 flex justify-center z-50 bg-white bg-opacity-100">
         <Toaster />
-        <section className="flex flex-col items-center ">
+        <div className="flex flex-col items-center ">
           <Breadcrum title="Opret annonce" destination={redirect} />
+          {/* her bliver progressbaren importeret og den står til step 3, som betyder at alle felter i progressbaren er fyldt ud */}
           <ProgressBar step={3} />
           <div className="flex flex-col items-center justify-between gap-y-3 h-15 mt-16">
             <p className=" text-center w-72 pb-6 text-xl">
@@ -63,7 +75,10 @@ function PostInfo({ redirect }) {
                 setBookInfo("price", valueAsNumber);
               }}
             />
-
+            {/* Her er der brugt select til at lave en valgmulighed i forhold til hvilken stand bogen er i,
+               her laver er der så nogle options, altså valgmuligheder som kan vælges mellem, de har hver deres value
+               det gør at vi kan se senere hvad valuen er på et senere tidspunkt, der er også en default value som er 0 og 
+               den er så disabled så det ikke er muligt at vælge den når du har valgt din stand.*/}
             <select
               name="stand"
               id="stand"
@@ -89,11 +104,13 @@ function PostInfo({ redirect }) {
             </div>
             <div className="flex flex-col justify-center w-72 pt-10">
               <p className="mb-5 self-start">
+                {/* Her bliver informationen/valget af uddannelse fra den forrige side hentet og skrevet ind i {bookInfo.major}*/}
                 <span className="font-semibold mr-2">Uddannelse:</span>
                 {bookInfo.major}
               </p>
 
               <p className="mb-5 self-start">
+                {/* Her bliver informationen/valget af semester fra den forrige side hentet og skrevet ind i {bookInfo.semester}*/}
                 <span className="font-semibold mr-2">Semester:</span>
                 {bookInfo.semester}.Semester
               </p>
@@ -109,7 +126,7 @@ function PostInfo({ redirect }) {
             />
             <BigButton color="grey" content="Annuller" click={handleClick} />
           </div>
-        </section>
+        </div>
       </div>
       {openModal && <ConfirmCreate redirect={() => setOpenModal(false)} />}
     </>

@@ -1,6 +1,10 @@
+// Karl
+// Et komponent der viser den knap, som går igen i vores projekt, herunder "Login", "Filtrer bøger", "Slet bog". Den er sat op med props der styrer farven, teksten og onClick funktionen.
 import React from "react";
 
 const BigButton = (props) => {
+  // En lille funktion der sørger for, at farven kan ændres via en prop kaldt props.color. Her tager den props.color, og oversætter enten "green", "grey" eller "red" til tekst som tailwind forstår. ("bg-medium-green" etc.)
+
   function getButtonColor() {
     if (props.color.toLowerCase() === "green") {
       return "bg-medium-green";
