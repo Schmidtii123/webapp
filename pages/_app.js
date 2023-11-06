@@ -57,6 +57,9 @@ export const useBookInfo = create((set) => ({
   },
 }));
 
+// Zustand objekt og funktioner til at styre filtrering og sortering af bøger.
+// Objektet indeholder informationer om filtrering
+// Funktionerne bruges til at ændre på objektet ved deconstruction (...) af objektet, og herefter en ændring af den specifikke key.
 export const useFilterStore = create((set) => ({
   filter: {
     sort: "",

@@ -1,4 +1,6 @@
 // Karl, Simon &
+// Index siden er forsiden (opdag), her bliver alle bøger vist, og der er mulighed for at filtrere og søge.
+
 import MarketplacePost from "@/components/explore/MarketplacePost";
 import FilterModal from "@/components/modal/FilterModal";
 import { useEffect, useState } from "react";
@@ -34,6 +36,7 @@ export default function Home() {
   const [filterTerm, setFilterTerm] = useState("");
   const [selectedBook, setSelectedBook] = useState(null);
 
+  // et if-statement der tjekker om staten "isLoading" er true, og hvis den er, så vises der en loading skærm.
   if (isLoading)
     return (
       <>
@@ -62,6 +65,7 @@ export default function Home() {
       </>
     );
 
+  // Hvis loading staten ikke er true, vises webapplikationen.
   return (
     <>
       <Head>
@@ -119,6 +123,9 @@ export default function Home() {
           </div>
         </div>
 
+        {/*
+        Her bliver bøgerne vist med .map metoden, men inden da styres alle filtrene, hvor der først bliver filtreret på titel (søgefelt), derefter semester, major og til sidst en .sort method der sorterer på baggrund af pris. I alle .filter og .sort bruges zustand-objektet fra _app.js
+        */}
         <div className="flex flex-wrap justify-start gap-y-4 pb-20 fade-in">
           {books.length > 0 &&
             books
