@@ -33,9 +33,10 @@ const SavedBooks = ({ redirect }) => {
             savedBooks.map((book, i) => (
               <div
                 key={i}
-                className=" border-y border-gray-300 py-6 px-8 flex text-lg justify-between"
+                className=" border-y border-gray-300 py-6 px-8 flex text-lg justify-between items-center"
+                onClick={() => setSelectedBook(book.bookID)}
               >
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center w-1/4">
                   <img
                     className="w-20 h-28 object-cover border border-gray-300"
                     src={book.image}
@@ -49,7 +50,7 @@ const SavedBooks = ({ redirect }) => {
                   onClick={() => setSelectedBook(book.bookID)}
                   className="font-medium text-medium-green"
                 >
-                  Vis opslag
+                  Vis
                 </p>
               </div>
             ))

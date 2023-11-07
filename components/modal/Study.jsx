@@ -6,6 +6,10 @@ import { useState, useEffect } from "react";
 import ToggleFilterBook from "@/components/ToggleFilterBook";
 import { useBookInfo } from "@/pages/_app";
 
+/* 
+"Study" defineres og den modtager props som "redirect, data, changeStep, props".
+*/
+
 const Study = ({ redirect, data, changeStep, props }) => {
   const [openModal, setOpenModal] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -13,6 +17,10 @@ const Study = ({ redirect, data, changeStep, props }) => {
   const { bookInfo, setBookInfo, clearBookInfo } = useBookInfo();
   const [semesterValue, setSemesterValue] = useState(0);
 
+  /* 
+Der oprettes en række studier "majors" i en array. Brugeren kan søge studierne frem ved at søge i et inputfelt. Det filteres ved hjælp af
+"searchText" og de matchende uddannelser bliver vist som en liste alt efter om der er valgt en specifik uddannelse "(selectedMajor)"
+*/
   const majors = [
     "Pædagog",
     "Medicin",
@@ -48,6 +56,9 @@ const Study = ({ redirect, data, changeStep, props }) => {
     const inputText = searchText.toLowerCase();
     return majors.filter((major) => major.toLowerCase().includes(inputText));
   };
+
+  /* Brugeren kan vælge en uddannelse fra listen ved at klikke på den. Deres valg bliver gemt i "selectedMajors".
+  Brugeren kan også fravælge valget og søgningen. */
 
   const handleMajorSelection = (major) => {
     setSelectedMajor(major);

@@ -22,6 +22,12 @@ function CreatePost({ redirect }) {
 
   const { bookInfo, setBookInfo, clearBookInfo } = useBookInfo();
 
+  /* 
+"getBookInfoFromISBN" er en asynkron funktion der kaldes når brugeren klikker på "Næste". Den tager ISBN som argument og udfører en API-request 
+til Google Books Api ved at bruge Axios, og gemmer oplysninger om bogen, som navn, forhåndvisning og billedlink i "bookInfo". Hvis requesten lykkedes
+skifter den til "showStep" til to for at forsætte til næste del i opret annonce. "showError" bliver til sand, hvis der opstår en fejl og fejlen logges.
+*/
+
   const [isbnInput, setIsbnInput] = useState("");
   async function getBookInfoFromISBN(isbn) {
     setShowError(false);
@@ -34,6 +40,12 @@ function CreatePost({ redirect }) {
       const data = response.data.items[0].volumeInfo;
       const bookName = data.title;
       const previewLink = data.previewLink;
+
+      /* 
+Komponetnen under bruger "next/image" til at vise en illustration af en person, der indtaster ISBN nummer. Hvis bogen ikke er i Google APi 
+bliver et standard billede vist.
+*/
+
       const bookImage = data.imageLinks
         ? data.imageLinks.thumbnail
         : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNT0xwyLstvC7wH8jYIKur3GTcSq-g6fj2EbL4wk-qaONHYjBswa3rpFsZJeEjuXcG-lw&usqp=CAU";

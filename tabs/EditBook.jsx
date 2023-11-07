@@ -1,3 +1,5 @@
+/* Nicolai og Simon */
+
 import Breadcrum from "@/components/Breadcrum";
 import {
   addBookToSaved,
@@ -17,6 +19,8 @@ import { useDocument } from "react-firebase-hooks/firestore";
 import toast, { Toaster } from "react-hot-toast";
 import BigButton from "@/components/BigButton";
 import { updateBookByID, deleteBookByID } from "@/firebase/firebase";
+
+/* Der oprettes en række studier "majors" i en array. Det bliver brugt til valg af uddannelse */
 
 const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
   const majors = [
@@ -46,12 +50,22 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
     "International Business",
     "Statskundskab",
   ];
+
+  /* 
+"udeDocument "- hooket bliver brugt til at hente bogdata fra Firestore ved at tilgå dokumentet med at angive "docID".
+Bogen bliver gemt i data variablen, når det bliver fetched.
+*/
+
   const [snapshot, loading, error] = useDocument(doc(db, "books", docID));
   let data;
   if (snapshot) {
     data = snapshot.data();
   }
 
+  /* 
+  Funktionen laver et kald til "updateBookInfo", der opdatere bogoplysninger ved hjælp af "updateBookID". 
+  Funktionen "handleUpdateBook" håndtere opdatering af bogoplysninger. 
+  */
   const [sellerUsername, setSellerUsername] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   function updateBookInfo() {
@@ -72,6 +86,10 @@ const EditBook = ({ docID = "K6PqqAyCeidb7avm0xOA", redirect = () => {} }) => {
       console.log(error);
     }
   }
+
+  /* 
+"deleteBook" funktionen bliver kaldt når en brugere forsøger at slette bogen ved hjælp af "deleteBookInfo". 
+*/
 
   async function deleteBook() {
     setIsDeleting(true);
